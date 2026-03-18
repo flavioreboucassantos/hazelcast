@@ -42,14 +42,13 @@ public class HazelcastRunnableConcurrentSum implements Runnable {
 	/*
 	 * Thread Safe Sum Task
 	 */
-	private boolean threadSafeSumTask() throws Exception {
-		map.lock(null);
+	private void threadSafeSumTask() throws Exception {
+		map.lock(keyName);
 
 		try {
 			Integer integer = map.get(keyName);
 			integer++;
 			map.put(keyName, integer);
-			return true;
 
 		} catch (Exception e) {
 
@@ -61,10 +60,9 @@ public class HazelcastRunnableConcurrentSum implements Runnable {
 	}
 
 	private void runThreadSafeSumTask() {
-		int numberOfSum = 0;
-		int countRollbacks = 0;
 		try {
 			// sum every nsTimeBetweenSums
+			int numberOfSum = 0;
 			while (numberOfSum++ < numberOfSums) {
 				threadSafeSumTask();
 				final long timeNextRun = System.nanoTime() + nsTimeBetweenSums;
@@ -75,7 +73,7 @@ public class HazelcastRunnableConcurrentSum implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			HazelcastConcurrentSum.adderConcluded(countRollbacks);
+			HazelcastConcurrentSum.adderConcluded(0);
 		}
 	}
 
