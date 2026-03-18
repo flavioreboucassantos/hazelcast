@@ -43,20 +43,25 @@ public class HazelcastRunnableConcurrentSum implements Runnable {
 	 * Thread Safe Sum Task
 	 */
 	private boolean threadSafeSumTask() throws Exception {
-		map.lock(keyName);
-
 		try {
-			Integer integer = map.get(keyName);
-			integer++;
-			map.put(keyName, integer);
-			return true;
+			map.lock(keyName);
+
+			try {
+				Integer integer = map.get(keyName);
+				integer++;
+				map.put(keyName, integer);
+				return true;
+
+			} catch (Exception e) {
+
+				throw e;
+			} finally {
+
+				map.unlock(keyName);
+			}
 
 		} catch (Exception e) {
-
 			throw e;
-		} finally {
-
-			map.unlock(keyName);
 		}
 	}
 
