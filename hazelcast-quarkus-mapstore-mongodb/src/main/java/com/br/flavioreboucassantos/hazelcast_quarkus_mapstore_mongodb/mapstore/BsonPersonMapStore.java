@@ -5,14 +5,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bson.BsonPerson;
 import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.repository.RepositoryPerson;
 import com.hazelcast.map.MapStore;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class BsonPersonMapStore implements MapStore<String, BsonPerson> {
+
+	private final Logger LOG = LoggerFactory.getLogger(BsonPersonMapStore.class);
 
 	final RepositoryPerson repositoryPerson;
 
@@ -23,6 +29,9 @@ public class BsonPersonMapStore implements MapStore<String, BsonPerson> {
 
 	@Override
 	public void store(final String key, final BsonPerson value) {
+
+		LOG.info("\n\n\nstore::" + key);
+
 		// Write-Through: Hazelcast chama isso para persistir no Mongo
 		repositoryPerson.persistOrUpdate(value);
 	}

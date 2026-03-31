@@ -13,12 +13,17 @@ public final class BsonPerson extends PanacheMongoEntityBase {
 	@BsonId
 	public String id;
 
-	@BsonId
 	public String name;
 
-	@BsonId
 	public int age;
 
+	/*
+	 * Please ensure the class has a public, empty constructor with no arguments, or else a constructor with a BsonCreator annotation.
+	 */
+	public BsonPerson() {
+	}
+
+//	@BsonCreator
 	public BsonPerson(final DTOBsonPerson dtoBsonPerson) {
 		id = dtoBsonPerson.id();
 		name = dtoBsonPerson.name();

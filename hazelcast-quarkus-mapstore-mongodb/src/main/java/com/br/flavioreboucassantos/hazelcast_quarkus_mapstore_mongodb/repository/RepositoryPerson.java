@@ -3,6 +3,8 @@ package com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.repositor
 import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bson.BsonPerson;
 
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public final class RepositoryPerson implements PanacheMongoRepository<BsonPerson> {
 }

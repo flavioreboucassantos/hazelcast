@@ -1,0 +1,8 @@
+<hazelcast>
+  <map name="bsonPerson">
+    <map-store enabled="true">
+      <class-name>com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.mapstore.BsonPersonMapStore</class-name>
+      <write-delay-seconds>0</write-delay-seconds>
+    </map-store>
+  </map>
+</hazelcast>
