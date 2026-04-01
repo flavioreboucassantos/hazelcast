@@ -1,0 +1,14 @@
+<hazelcast>
+	<map name="bsonPerson">
+		<data-persistence enabled="true" />
+		<in-memory-format>BINARY</in-memory-format>
+		<indexes>
+			<!-- Índice Ordenado -->
+			<index name="timestampCreated" type="SORTED">
+				<attributes>
+					<attribute>_created</attribute>
+				</attributes>
+			</index>
+		</indexes>
+	</map>
+</hazelcast>

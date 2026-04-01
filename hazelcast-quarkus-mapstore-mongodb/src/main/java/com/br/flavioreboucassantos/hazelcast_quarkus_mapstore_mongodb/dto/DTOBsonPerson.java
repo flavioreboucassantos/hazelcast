@@ -1,7 +1,8 @@
 package com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.dto;
 
 public record DTOBsonPerson(
-		String id,
+		long id,
 		String name,
-		int age) {
+		int age,
+		long _created) {
 }

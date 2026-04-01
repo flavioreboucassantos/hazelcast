@@ -1,7 +1,6 @@
 package com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.map.IMap;
 
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.StartupEvent;
@@ -21,8 +20,11 @@ public class HazelcastQuarkusMapStoreMongoDB {
 	HazelcastInstance hazelcastInstance;
 
 	void onStart(@Observes StartupEvent ev) {
-//		IMap<Object, Object> map = hazelcastInstance.getMap("bsonPerson");
+//		IMap<String, BsonPerson> map = hazelcastInstance.getMap("bsonPerson");
 //		map.destroy();
+//		map = hazelcastInstance.getMap("bsonPerson");
+//		map.put("recreate", new BsonPerson());
+//		map.clear();
 	}
 
 }

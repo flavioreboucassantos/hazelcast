@@ -1,10 +1,10 @@
 package com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.mapstore;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class BsonPersonMapStore implements MapStore<String, BsonPerson> {
+public class BsonPersonMapStore implements MapStore<Long, BsonPerson> {
 
 	private final Logger LOG = LoggerFactory.getLogger(BsonPersonMapStore.class);
 
@@ -28,54 +28,61 @@ public class BsonPersonMapStore implements MapStore<String, BsonPerson> {
 	}
 
 	@Override
-	public void store(final String key, final BsonPerson value) {
+	public void store(final Long key, final BsonPerson value) {
 
-		LOG.info("\n\n\nstore::" + key);
+		LOG.info("\n\n\nstore::" + key + " value: " + value.toString());
 
 		// Write-Through: Hazelcast chama isso para persistir no Mongo
 		repositoryPerson.persistOrUpdate(value);
 	}
 
 	@Override
-	public void storeAll(final Map<String, BsonPerson> map) {
+	public void storeAll(final Map<Long, BsonPerson> map) {
+
+		LOG.info("\n\n\nstoreAll::" + map);
+
 		map.forEach(this::store);
 	}
 
 	@Override
-	public BsonPerson load(final String key) {
+	public BsonPerson load(final Long key) {
+
+		LOG.info("\n\n\nload::" + key);
+
 		// Carrega do Mongo se não estiver no cache
-		if (ObjectId.isValid(key)) {
-			return repositoryPerson.findById(new ObjectId(key));
-		} else {
-			// Handle the case where the string is not a valid ObjectId (e.g., return null, throw error)
-			System.err.println("Invalid ObjectId format: " + key);
-			return null;
-		}
+		return repositoryPerson.findById(key);
 	}
 
 	@Override
-	public Map<String, BsonPerson> loadAll(final Collection<String> keys) {
-		return repositoryPerson.stream("id", keys)
+	public Map<Long, BsonPerson> loadAll(final Collection<Long> keys) {
+
+		final Map<Long, BsonPerson> collect = keys.stream()
+				.map(key -> repositoryPerson.findById(key))
+				.filter(person -> person != null)
 				.collect(Collectors.toMap(p -> p.id, p -> p));
+
+		LOG.info("\n\n\nloadAll::" + keys + "\ncollect::" + collect.toString());
+
+		return collect;
 	}
 
 	@Override
-	public Iterable<String> loadAllKeys() {
-		return repositoryPerson.findAll().stream().map(p -> p.id).collect(Collectors.toList());
+	public List<Long> loadAllKeys() {
+
+		LOG.info("\n\n\nloadAllKeys>>");
+
+		return repositoryPerson.streamAll()
+				.map(p -> p.id)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public void delete(final String key) {
-		if (ObjectId.isValid(key)) {
-			repositoryPerson.deleteById(new ObjectId(key));
-		} else {
-			// Handle the case where the string is not a valid ObjectId (e.g., return null, throw error)
-			System.err.println("Invalid ObjectId format: " + key);
-		}
+	public void delete(final Long key) {
+		repositoryPerson.deleteById(key);
 	}
 
 	@Override
-	public void deleteAll(Collection<String> keys) {
+	public void deleteAll(final Collection<Long> keys) {
 		keys.forEach(this::delete);
 	}
 }

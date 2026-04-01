@@ -11,11 +11,13 @@ import io.quarkus.mongodb.panache.common.MongoEntity;
 public final class BsonPerson extends PanacheMongoEntityBase {
 
 	@BsonId
-	public String id;
+	public long id;
 
 	public String name;
 
 	public int age;
+
+	public long ts_created;
 
 	/*
 	 * Please ensure the class has a public, empty constructor with no arguments, or else a constructor with a BsonCreator annotation.
@@ -28,6 +30,18 @@ public final class BsonPerson extends PanacheMongoEntityBase {
 		id = dtoBsonPerson.id();
 		name = dtoBsonPerson.name();
 		age = dtoBsonPerson.age();
+	}
+
+	public BsonPerson(BsonPerson value, long timeMillis) {
+		id = value.id;
+		name = value.name;
+		age = value.age;
+		ts_created = timeMillis;
+	}
+
+	@Override
+	public String toString() {
+		return "BsonPerson [id=" + id + ", name=" + name + ", age=" + age + ", ts_created=" + ts_created + "]";
 	}
 
 }

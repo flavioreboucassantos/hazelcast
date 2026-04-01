@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bson.BsonPerson;
 import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.dto.DTOBsonPerson;
+import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.processor.EntryProcessorBsonPerson_created;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.hazelcast.query.Predicate;
@@ -27,7 +28,7 @@ public class ControllerBsonPerson {
 	private final Logger LOG = LoggerFactory.getLogger(ControllerBsonPerson.class);
 
 	final HazelcastInstance hazelcastInstance;
-	final IMap<String, BsonPerson> map;
+	final IMap<Long, BsonPerson> map;
 
 	@Inject
 	public ControllerBsonPerson(final HazelcastInstance hazelcastInstance) {
@@ -39,9 +40,15 @@ public class ControllerBsonPerson {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response put(final DTOBsonPerson dtoBsonPerson) {
-		if (dtoBsonPerson != null && !dtoBsonPerson.id().isBlank() && !dtoBsonPerson.id().isEmpty()) {
+		if (dtoBsonPerson != null && dtoBsonPerson.id() > 0) {
 			map.put(dtoBsonPerson.id(), new BsonPerson(dtoBsonPerson));
+			map.executeOnKey(dtoBsonPerson.id(), new EntryProcessorBsonPerson_created());
+
+			// Executa em todas as chaves (Cuidado: pode ser pesado)
+//			map.executeOnEntries(new EntryProcessorBsonPerson_created());
+
 			return Response.ok(dtoBsonPerson).status(Response.Status.ACCEPTED).build();
+
 		} else {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
@@ -50,10 +57,13 @@ public class ControllerBsonPerson {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<BsonPerson> getAll() {
-		Predicate<String, BsonPerson> predicate = Predicates.and(
+//		final PagingPredicate<Long, BsonPerson> pagingPredicate = Predicates.pagingPredicate(3);
+
+		final Predicate<Long, BsonPerson> predicates = Predicates.and(
 				Predicates.greaterEqual("age", 18),
 				Predicates.lessEqual("age", 65));
-		Collection<BsonPerson> result = map.values(predicate);
+
+		Collection<BsonPerson> result = map.values(predicates);
 		return result;
 	}
 
