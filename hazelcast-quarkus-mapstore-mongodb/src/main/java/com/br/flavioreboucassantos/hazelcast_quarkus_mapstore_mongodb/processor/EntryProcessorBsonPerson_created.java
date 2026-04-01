@@ -2,10 +2,10 @@ package com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.processor
 
 import java.util.Map.Entry;
 
-import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bson.BsonPerson;
+import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bsonentity.BsonPersonProfile;
 import com.hazelcast.map.EntryProcessor;
 
-public class EntryProcessorBsonPerson_created implements EntryProcessor<Long, BsonPerson, Object> {
+public class EntryProcessorBsonPerson_created implements EntryProcessor<Long, BsonPersonProfile, Object> {
 	/**
 	 * 
 	 */
@@ -36,8 +36,8 @@ public class EntryProcessorBsonPerson_created implements EntryProcessor<Long, Bs
 	 */
 
 	@Override
-	public Object process(final Entry<Long, BsonPerson> entry) {
-		entry.setValue(new BsonPerson(entry.getValue(), System.currentTimeMillis()));
+	public Object process(final Entry<Long, BsonPersonProfile> entry) {
+//		entry.setValue(new BsonPerson(entry.getValue(), System.currentTimeMillis()));
 		return true; // A result that will be returned from the method taking the EntryProcessor, such as IMap.executeOnKey()
 	}
 

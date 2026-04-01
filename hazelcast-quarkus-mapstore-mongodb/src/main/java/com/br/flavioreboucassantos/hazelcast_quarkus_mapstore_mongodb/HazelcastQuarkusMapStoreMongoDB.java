@@ -20,10 +20,10 @@ public class HazelcastQuarkusMapStoreMongoDB {
 	HazelcastInstance hazelcastInstance;
 
 	void onStart(@Observes StartupEvent ev) {
-//		IMap<String, BsonPerson> map = hazelcastInstance.getMap("bsonPerson");
+//		IMap<String, BsonPersonProfile> map = hazelcastInstance.getMap("bsonPersonProfile");
 //		map.destroy();
-//		map = hazelcastInstance.getMap("bsonPerson");
-//		map.put("recreate", new BsonPerson());
+//		map = hazelcastInstance.getMap("bsonPersonProfile");
+//		map.put("recreate", new BsonPersonProfile());
 //		map.clear();
 	}
 

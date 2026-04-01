@@ -8,36 +8,36 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bson.BsonPerson;
-import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.repository.RepositoryPerson;
+import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.bsonentity.BsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.repository.RepositoryBsonPersonProfile;
 import com.hazelcast.map.MapStore;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class BsonPersonMapStore implements MapStore<Long, BsonPerson> {
+public class BsonPersonProfileMapStore implements MapStore<Long, BsonPersonProfile> {
 
-	private final Logger LOG = LoggerFactory.getLogger(BsonPersonMapStore.class);
+	private final Logger LOG = LoggerFactory.getLogger(BsonPersonProfileMapStore.class);
 
-	final RepositoryPerson repositoryPerson;
+	final RepositoryBsonPersonProfile repositoryBsonPersonProfile;
 
 	@Inject
-	public BsonPersonMapStore(final RepositoryPerson repositoryPerson) {
-		this.repositoryPerson = repositoryPerson;
+	public BsonPersonProfileMapStore(final RepositoryBsonPersonProfile repositoryBsonPersonProfile) {
+		this.repositoryBsonPersonProfile = repositoryBsonPersonProfile;
 	}
 
 	@Override
-	public void store(final Long key, final BsonPerson value) {
+	public void store(final Long key, final BsonPersonProfile value) {
 
 		LOG.info("\n\n\nstore::" + key + " value: " + value.toString());
 
 		// Write-Through: Hazelcast chama isso para persistir no Mongo
-		repositoryPerson.persistOrUpdate(value);
+		repositoryBsonPersonProfile.persistOrUpdate(value);
 	}
 
 	@Override
-	public void storeAll(final Map<Long, BsonPerson> map) {
+	public void storeAll(final Map<Long, BsonPersonProfile> map) {
 
 		LOG.info("\n\n\nstoreAll::" + map);
 
@@ -45,19 +45,19 @@ public class BsonPersonMapStore implements MapStore<Long, BsonPerson> {
 	}
 
 	@Override
-	public BsonPerson load(final Long key) {
+	public BsonPersonProfile load(final Long key) {
 
 		LOG.info("\n\n\nload::" + key);
 
 		// Carrega do Mongo se não estiver no cache
-		return repositoryPerson.findById(key);
+		return repositoryBsonPersonProfile.findById(key);
 	}
 
 	@Override
-	public Map<Long, BsonPerson> loadAll(final Collection<Long> keys) {
+	public Map<Long, BsonPersonProfile> loadAll(final Collection<Long> keys) {
 
-		final Map<Long, BsonPerson> collect = keys.stream()
-				.map(key -> repositoryPerson.findById(key))
+		final Map<Long, BsonPersonProfile> collect = keys.stream()
+				.map(key -> repositoryBsonPersonProfile.findById(key))
 				.filter(person -> person != null)
 				.collect(Collectors.toMap(p -> p.id, p -> p));
 
@@ -71,14 +71,14 @@ public class BsonPersonMapStore implements MapStore<Long, BsonPerson> {
 
 		LOG.info("\n\n\nloadAllKeys>>");
 
-		return repositoryPerson.streamAll()
+		return repositoryBsonPersonProfile.streamAll()
 				.map(p -> p.id)
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public void delete(final Long key) {
-		repositoryPerson.deleteById(key);
+		repositoryBsonPersonProfile.deleteById(key);
 	}
 
 	@Override
