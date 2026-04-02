@@ -1,6 +1,8 @@
 package com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.mapconfig;
 
 import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.mapstore.BsonPersonProfileMapStore;
+import com.br.flavioreboucassantos.hazelcast_quarkus_mapstore_mongodb.serializer.BsonPersonProfileSerializer;
+import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.IndexConfig;
@@ -23,7 +25,9 @@ public class MapConfigBsonPersonProfile {
 		this.bsonPersonProfileMapStore = bsonPersonProfileMapStore;
 	}
 
-	public final void setConfig(final MapConfig mapConfig) {
+	public final void setConfig(final Config config) {
+		final MapConfig mapConfig = new MapConfig();
+
 		/*
 		 * 1) Configure MapStoreConfig to MapConfig
 		 */
@@ -67,5 +71,26 @@ public class MapConfigBsonPersonProfile {
 		evictionConfig.setSize(100);
 		// Attach EvictionConfig
 		mapConfig.setEvictionConfig(evictionConfig);
+
+		/*
+		 * 4) Configure Config and attach MapConfig
+		 */
+		// Attach MapConfig
+		config.addMapConfig(mapConfig);
+
+		/*
+		 * 5) Compact Serialization:
+		 * - Compact Serialization no Hazelcast (introduzida como estável na versão 5.2+) é altamente recomendado para melhorar o desempenho, reduzir o uso de memória e bandwidth, e suportar evolução de esquema (schema evolution) sem a
+		 * necessidade de reescrever classes ou implementar interfaces de serialização pesadas.
+		 * - Permitir que o Hazelcast use reflexão para serializar classes automaticamente.
+		 * - Adicione a classe à configuração compacta.
+		 */
+//		config.getSerializationConfig()
+//				.getCompactSerializationConfig()
+//				.addClass(BsonPersonProfile.class);
+
+		config.getSerializationConfig()
+				.getCompactSerializationConfig()
+				.addSerializer(new BsonPersonProfileSerializer());
 	}
 }
