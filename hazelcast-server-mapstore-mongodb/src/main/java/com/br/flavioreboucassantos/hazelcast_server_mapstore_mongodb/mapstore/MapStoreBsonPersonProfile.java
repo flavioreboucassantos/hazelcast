@@ -1,0 +1,127 @@
+package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.bson.Document;
+import org.bson.conversions.Bson;
+
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.bsonentity.BsonPersonProfile;
+import com.hazelcast.logging.ILogger;
+import com.hazelcast.logging.Logger;
+import com.hazelcast.map.MapStore;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+
+import tools.jackson.databind.ObjectMapper;
+
+public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPersonProfile> {
+
+	private final ILogger LOG = Logger.getLogger(MapStoreBsonPersonProfile.class);
+
+	private final MongoCollection<BsonPersonProfile> collection;
+	private final MongoCollection<Document> collectionDocument;
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	private final ReplaceOptions replaceOptionsUpsertTrue;
+
+	public MapStoreBsonPersonProfile(final MongoDatabase database) {
+		this.collection = database.getCollection("person_profile", BsonPersonProfile.class);
+		this.collectionDocument = database.getCollection("person_profile", Document.class);
+
+		ReplaceOptions replaceOptions = new ReplaceOptions();
+		replaceOptionsUpsertTrue = replaceOptions.upsert(true);
+	}
+
+	@Override
+	public BsonPersonProfile load(final Long key) {
+
+		LOG.info("load::" + key);
+
+		return collection.find(Filters.eq("_id", key)).first();
+	}
+
+	@Override
+	public Map<Long, BsonPersonProfile> loadAll(final Collection<Long> keys) {
+
+		LOG.info("loadAll::>>");
+
+		Map<Long, BsonPersonProfile> map = collection.find(Filters.in("_id", keys))
+				.into(new ArrayList<>()) // Carrega os dados
+				.stream()
+				.collect(Collectors.toMap(b -> b.id, b -> b));
+
+		LOG.info("loadAll::" + keys.toString());
+
+		return map;
+	}
+
+	@Override
+	public Iterable<Long> loadAllKeys() {
+
+		LOG.info("loadAllKeys>>");
+
+		// Pipeline de Agregação
+		final List<Bson> pipeline = Arrays.asList(
+				// 1. Converte o documento para um array de chave-valor: [{k: "chave", v: "valor"}]
+				new Document("$project", new Document("arrayOfKeyValues", new Document("$objectToArray", "$$ROOT"))),
+				// 2. Desenrola o array para processar cada chave
+				new Document("$unwind", "$arrayOfKeyValues"),
+				// 3. Agrupa por chave e obtém apenas as chaves únicas
+				new Document("$group", new Document("_id", null).append("allKeys", new Document("$addToSet", "$arrayOfKeyValues.k"))));
+
+		// Executa a agregação
+		final List<Document> results = collectionDocument.aggregate(pipeline).into(new ArrayList<>());
+
+		if (!results.isEmpty())
+			return (List<Long>) results.get(0).get("allKeys");
+		else
+			return List.of();
+
+	}
+
+	@Override
+	public void store(final Long key, final BsonPersonProfile value) {
+
+		LOG.info("store::" + key + value.toString());
+
+		try {
+
+			collection.replaceOne(Filters.eq("_id", value.id), value, replaceOptionsUpsertTrue);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void storeAll(final Map<Long, BsonPersonProfile> map) {
+
+		LOG.info("storeAll::" + map.toString());
+
+		map.forEach(this::store);
+	}
+
+	@Override
+	public void delete(final Long key) {
+
+		LOG.info("delete::" + key);
+
+		collection.deleteOne(new Document("_id", key));
+	}
+
+	@Override
+	public void deleteAll(final Collection<Long> keys) {
+
+		LOG.info("deleteAll::" + keys);
+
+		keys.forEach(this::delete);
+	}
+
+}

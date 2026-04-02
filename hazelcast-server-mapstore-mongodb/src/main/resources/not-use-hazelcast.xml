@@ -1,0 +1,15 @@
+<hazelcast>
+	<map name="bsonPersonProfile">
+		<statistics-enabled>true</statistics-enabled>
+		<per-entry-stats-enabled>true</per-entry-stats-enabled>
+		<data-persistence enabled="true" />
+		<in-memory-format>BINARY</in-memory-format>
+		<indexes>
+			<index name="timestampCreated" type="SORTED">
+				<attributes>
+					<attribute>tsCreated</attribute>
+				</attributes>
+			</index>
+		</indexes>
+	</map>
+</hazelcast>
