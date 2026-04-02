@@ -42,7 +42,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public BsonPersonProfile load(final Long key) {
 
-		LOG.info("load::" + key);
+		LOG.info("load:: " + key);
 
 		return collection.find(Filters.eq("_id", key)).first();
 	}
@@ -50,14 +50,14 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public Map<Long, BsonPersonProfile> loadAll(final Collection<Long> keys) {
 
-		LOG.info("loadAll::>>");
+		LOG.info("loadAll::>> ");
 
 		Map<Long, BsonPersonProfile> map = collection.find(Filters.in("_id", keys))
 				.into(new ArrayList<>()) // Carrega os dados
 				.stream()
 				.collect(Collectors.toMap(b -> b.id, b -> b));
 
-		LOG.info("loadAll::" + keys.toString());
+		LOG.info("loadAll:: " + keys.toString());
 
 		return map;
 	}
@@ -65,7 +65,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public Iterable<Long> loadAllKeys() {
 
-		LOG.info("loadAllKeys>>");
+		LOG.info("loadAllKeys>> ");
 
 		// Pipeline de Agregação
 		final List<Bson> pipeline = Arrays.asList(
@@ -89,7 +89,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public void store(final Long key, final BsonPersonProfile value) {
 
-		LOG.info("store::" + key + value.toString());
+		LOG.info("store:: " + key + value.toString());
 
 		try {
 
@@ -103,7 +103,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public void storeAll(final Map<Long, BsonPersonProfile> map) {
 
-		LOG.info("storeAll::" + map.toString());
+		LOG.info("storeAll:: " + map.toString());
 
 		map.forEach(this::store);
 	}
@@ -111,7 +111,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public void delete(final Long key) {
 
-		LOG.info("delete::" + key);
+		LOG.info("delete:: " + key);
 
 		collection.deleteOne(new Document("_id", key));
 	}
@@ -119,7 +119,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	@Override
 	public void deleteAll(final Collection<Long> keys) {
 
-		LOG.info("deleteAll::" + keys);
+		LOG.info("deleteAll:: " + keys);
 
 		keys.forEach(this::delete);
 	}

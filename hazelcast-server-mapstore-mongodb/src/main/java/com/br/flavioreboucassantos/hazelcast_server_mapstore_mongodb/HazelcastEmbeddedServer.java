@@ -7,9 +7,12 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.bsonentity.BsonPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorBsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreBsonPersonProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.logging.ILogger;
+import com.hazelcast.logging.Logger;
 import com.hazelcast.map.IMap;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -18,6 +21,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class HazelcastEmbeddedServer {
+	
+	static private final ILogger LOG = Logger.getLogger(MapStoreBsonPersonProfile.class);
 
 	static String mapNamePersonProfile;
 
@@ -44,7 +49,7 @@ public class HazelcastEmbeddedServer {
 		// 2. Build the settings object
 		MongoClientSettings settings = MongoClientSettings.builder()
 				.applyConnectionString(connectionString)
-				.applicationName("MyJavaApp")
+				.applicationName("HazelcastEmbeddedServer")
 				.codecRegistry(pojoCodecRegistry)// Apply the registry to your MongoClientSettings
 				.build();
 		MongoClient mongoClient = MongoClients.create(settings);
@@ -66,6 +71,10 @@ public class HazelcastEmbeddedServer {
 		System.out.println("Hazelcast Member iniciado.");
 
 		IMap<Long, BsonPersonProfile> map = hz.getMap(mapNamePersonProfile);
+		final BsonPersonProfile bsonPersonProfile = map.get(100L);
+		
+		LOG.info(bsonPersonProfile.toString());
+		
 		map.put(100L, new BsonPersonProfile(100L, "nameTeste", 50, 1234567890L));
 
 		// Mantém a JVM rodando
