@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>quarkus-hazelcast-client</artifactId>
-		</dependency>		
+		</dependency>
 
 		<!-- QUARKUS -->
 		<dependency>
@@ -76,6 +76,44 @@
 
 	<build>
 		<plugins>
+			<!-- CREATE ENTITY & DTO JAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>					
+					<outputDirectory>${project.basedir}/../shared-library</outputDirectory>
+					<finalName>entity-dto-shared</finalName>
+					<includes>
+						<include>
+							com/br/flavioreboucassantos/hazelcast_client_quarkus/entity/**</include>
+						<include>
+							com/br/flavioreboucassantos/hazelcast_client_quarkus/dto/**</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>jar-entity-dto-shared</id>
+						<!-- 
+							Fases Principais do Ciclo de Vida Padrão
+							
+							As fases mais comuns executadas na ORDEM são: 							
+							- validate: Verifica se o projeto está correto e com todas as informações necessárias.
+							- compile: Compila o código-fonte (.java) do projeto.
+							- test: Executa os testes unitários utilizando um framework de testes (ex: JUnit), sem empacotar o código.
+							- package: Pega o código compilado e o empacota em seu formato distribuível, como JAR ou WAR.
+							- verify: Executa verificações nos resultados dos testes de integração para garantir a qualidade.
+							- install: Instala o pacote no repositório local (.m2), para que possa ser usado como dependência em outros projetos locais.
+							- deploy: Copia o pacote final para o repositório remoto para compartilhamento com outros desenvolvedores ou projetos.
+						-->
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>${quarkus.platform.group-id}</groupId>
 				<artifactId>quarkus-maven-plugin</artifactId>
