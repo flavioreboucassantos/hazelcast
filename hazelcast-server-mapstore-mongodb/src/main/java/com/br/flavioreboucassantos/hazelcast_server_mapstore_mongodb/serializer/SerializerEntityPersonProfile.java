@@ -1,6 +1,6 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
 import com.hazelcast.nio.serialization.compact.CompactReader;
@@ -11,16 +11,10 @@ public final class SerializerEntityPersonProfile implements CompactSerializer<En
 
 	private final ILogger LOG = Logger.getLogger(SerializerEntityPersonProfile.class);
 
-	final String mapName;
-
-	public SerializerEntityPersonProfile(final String mapName) {
-		this.mapName = mapName;
-	}
-
 	@Override
 	public EntityPersonProfile read(final CompactReader reader) {
 
-		LOG.info("\n\n\nSerializerEntityPersonProfile::read::name" + reader.readString("name"));
+		LOG.info("SerializerEntityPersonProfile::read::name::" + reader.readString("name") + "\n\n\n");
 
 		return new EntityPersonProfile(
 				reader.readInt64("id"),
@@ -31,6 +25,9 @@ public final class SerializerEntityPersonProfile implements CompactSerializer<En
 
 	@Override
 	public void write(final CompactWriter writer, final EntityPersonProfile obj) {
+
+		LOG.info("SerializerEntityPersonProfile::write::name::" + obj.name + "\n\n\n");
+
 		writer.writeInt64("id", obj.id);
 		writer.writeString("name", obj.name);
 		writer.writeInt32("age", obj.age);
@@ -44,6 +41,6 @@ public final class SerializerEntityPersonProfile implements CompactSerializer<En
 
 	@Override
 	public String getTypeName() {
-		return mapName; // Unico dentro do cluster
+		return "EntityPersonProfile"; // Returns the unique type name for the class T.
 	}
 }

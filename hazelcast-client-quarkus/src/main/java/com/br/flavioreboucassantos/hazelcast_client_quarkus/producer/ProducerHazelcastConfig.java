@@ -36,7 +36,7 @@ public class ProducerHazelcastConfig {
 	public HazelcastInstance hazelcastInstance() {
 		// 1)
 		for (int i = 0; i < listBaseClientConfigurator.size(); i++)
-			listBaseClientConfigurator.get(i).setClientNearCacheConfig(clientConfig);
+			listBaseClientConfigurator.get(i).setClientConfig(clientConfig);
 
 		final HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
 //		final Config config = client.getConfig();

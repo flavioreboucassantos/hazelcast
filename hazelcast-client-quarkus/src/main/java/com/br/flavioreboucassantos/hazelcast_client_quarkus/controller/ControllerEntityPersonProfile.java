@@ -6,9 +6,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.comparator.ComparatorEntityPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.dto.DTOPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.ComparatorEntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.hazelcast.query.PagingPredicate;

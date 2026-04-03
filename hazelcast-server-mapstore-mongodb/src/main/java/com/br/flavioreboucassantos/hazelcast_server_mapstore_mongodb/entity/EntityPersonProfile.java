@@ -1,9 +1,12 @@
-package com.br.flavioreboucassantos.hazelcast_client_quarkus.entity;
+package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.dto.DTOPersonProfile;
+import org.bson.codecs.pojo.annotations.BsonId;
+
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonProfile;
 
 public final class EntityPersonProfile {
 
+	@BsonId
 	public long id;
 
 	public String name;
@@ -32,6 +35,38 @@ public final class EntityPersonProfile {
 		id = dtoPersonProfile.id();
 		name = dtoPersonProfile.name();
 		age = dtoPersonProfile.age();
+		this.tsCreated = tsCreated;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public long getTsCreated() {
+		return tsCreated;
+	}
+
+	public void setTsCreated(long tsCreated) {
 		this.tsCreated = tsCreated;
 	}
 

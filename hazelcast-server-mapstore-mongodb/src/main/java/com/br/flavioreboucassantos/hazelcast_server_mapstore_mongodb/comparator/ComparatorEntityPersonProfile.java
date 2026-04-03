@@ -1,10 +1,10 @@
-package com.br.flavioreboucassantos.hazelcast_client_quarkus.comparator;
+package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map.Entry;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 
 public final class ComparatorEntityPersonProfile implements Comparator<Entry<Long, EntityPersonProfile>>, Serializable {
 	/**

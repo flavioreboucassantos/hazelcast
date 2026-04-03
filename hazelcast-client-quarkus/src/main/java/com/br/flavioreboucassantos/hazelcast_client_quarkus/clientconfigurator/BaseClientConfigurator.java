@@ -23,6 +23,6 @@ public interface BaseClientConfigurator {
 	 * 
 	 * @param clientConfig
 	 */
-	public void setClientNearCacheConfig(final ClientConfig clientConfig);
+	public void setClientConfig(final ClientConfig clientConfig);
 
 }

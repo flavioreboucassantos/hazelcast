@@ -5,7 +5,6 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreEntityPersonProfile;
 import com.hazelcast.config.Config;
@@ -13,7 +12,6 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
-import com.hazelcast.map.IMap;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -70,10 +68,10 @@ public class HazelcastEmbeddedServer {
 		HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
 		System.out.println("Hazelcast Member iniciado.");
 
-		IMap<Long, EntityPersonProfile> mapEntityPersonProfile = hz.getMap(mapNamePersonProfile);
-//		final EntityPersonProfile entityPersonProfile = map.get(100L);
+//		IMap<Long, EntityPersonProfile> mapEntityPersonProfile = hz.getMap(mapNamePersonProfile);
+//		final EntityPersonProfile entityPersonProfile = mapEntityPersonProfile.get(100L);
 //		LOG.info("\n\n\n" + entityPersonProfile.toString() + "\n\n\n");
-//		map.put(100L, new EntityPersonProfile(100L, "nameTeste", 50, 1234567890L));
+//		mapEntityPersonProfile.put(100L, new EntityPersonProfile(100L, "nameTeste", 50, 1234567890L));
 
 		// Mantém a JVM rodando
 		Thread.currentThread().join();

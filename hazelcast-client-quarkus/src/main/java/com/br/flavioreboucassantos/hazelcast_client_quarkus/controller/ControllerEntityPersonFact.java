@@ -4,8 +4,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.dto.DTOPersonFact;
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonFact;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonFact;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonFact;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 

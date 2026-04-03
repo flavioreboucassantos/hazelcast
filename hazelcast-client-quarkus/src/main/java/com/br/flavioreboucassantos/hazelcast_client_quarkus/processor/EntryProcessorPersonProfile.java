@@ -2,7 +2,7 @@ package com.br.flavioreboucassantos.hazelcast_client_quarkus.processor;
 
 import java.util.Map.Entry;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 import com.hazelcast.map.EntryProcessor;
 
 public class EntryProcessorPersonProfile implements EntryProcessor<Long, EntityPersonProfile, Object> {

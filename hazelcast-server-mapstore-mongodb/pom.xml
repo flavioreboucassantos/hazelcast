@@ -61,13 +61,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.br.flavioreboucassantos.hazelcast-shared-library</groupId>
-			<artifactId>entity-person-etc</artifactId>
-			<version>1.0.0</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
@@ -98,6 +91,73 @@
 					<version>3.15.0</version>
 				</plugin>
 
+				<!-- CREATE JAR entity-person-etc -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.5.0</version>
+					<configuration>
+						<outputDirectory>${project.basedir}/../shared-library</outputDirectory>
+						<finalName>entity-person-etc</finalName>
+						<includes>
+							<include>com/br/flavioreboucassantos/hazelcast_server_mapstore_mongodb/entity/**</include>
+							<include>com/br/flavioreboucassantos/hazelcast_server_mapstore_mongodb/dto/**</include>
+							<include>com/br/flavioreboucassantos/hazelcast_server_mapstore_mongodb/comparator/**</include>
+							<include>com/br/flavioreboucassantos/hazelcast_server_mapstore_mongodb/serializer/**</include>
+						</includes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>entity-person-etc</id> <!-- mvn clean compile jar:jar@entity-person-etc -->
+							<!-- 
+								Fases Principais do Ciclo de Vida Padrão
+								
+								As fases mais comuns executadas na ORDEM são: 							
+								- validate: Verifica se o projeto está correto e com todas as informações necessárias.
+								- compile: Compila o código-fonte (.java) do projeto.
+								- test: Executa os testes unitários utilizando um framework de testes (ex: JUnit), sem empacotar o código.
+								- package: Pega o código compilado e o empacota em seu formato distribuível, como JAR ou WAR.
+								- verify: Executa verificações nos resultados dos testes de integração para garantir a qualidade.
+								- install: Instala o pacote no repositório local (.m2), para que possa ser usado como dependência em outros projetos locais.
+								- deploy: Copia o pacote final para o repositório remoto para compartilhamento com outros desenvolvedores ou projetos.
+							-->
+							<phase>package</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- INSTALL JAR entity-person-etc -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.1.4</version>
+					<executions>
+						<execution>
+							<id>entity-person-etc</id> <!-- mvn install:install-file@entity-person-etc -->
+							<phase>install</phase>
+							<!--
+								The plugin itself contains three primary goals: 
+								- install:install: The standard goal used during the build lifecycle. It automatically installs the project's main artifact (e.g., JAR, WAR), its POM, and any attached artifacts (sources, javadoc) into the local repository.
+								- install:install-file: Used to manually install an external artifact (not built by the current Maven project) into the local repository.
+								- install:help: Displays help and parameter information for the Install Plugin.
+							-->
+							<goals>
+								<goal>install-file</goal> <!-- Objetivo (goal) específico -->
+							</goals>
+							<configuration>
+								<file>${project.basedir}/../shared-library/entity-person-etc.jar</file>
+								<groupId>com.br.flavioreboucassantos.hazelcast-shared-library</groupId>
+								<artifactId>entity-person-etc</artifactId>
+								<version>1.0.0</version>
+								<packaging>jar</packaging>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
 				<!-- CREATE JAR SETTING mainClass, include dependencies and configurations of assembly.xml -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -109,7 +169,6 @@
 						</descriptors>
 						<archive>
 							<manifest>
-								<addClasspath>true</addClasspath>
 								<mainClass>com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.HazelcastEmbeddedServer</mainClass>
 							</manifest>
 						</archive>
@@ -128,10 +187,6 @@
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.3.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>3.1.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>

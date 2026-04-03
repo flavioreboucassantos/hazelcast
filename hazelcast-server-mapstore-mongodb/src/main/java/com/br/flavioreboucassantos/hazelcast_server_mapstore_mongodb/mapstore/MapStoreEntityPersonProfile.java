@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
 import com.hazelcast.map.MapStore;
@@ -71,7 +71,7 @@ public final class MapStoreEntityPersonProfile implements MapStore<Long, EntityP
 		final List<Long> ids = new ArrayList<>();
 		collection.find()
 				.projection(projectionIncludeId)
-				.map(doc -> doc.id) // Converte ObjectId para String
+				.map(doc -> doc.id)
 				.into(ids);
 
 		LOG.info("loadAllKeys:: " + ids.toString());

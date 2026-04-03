@@ -4,6 +4,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerEntityPersonProfile;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
@@ -32,9 +33,9 @@ public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigur
 	}
 
 	@Override
-	public final void setClientNearCacheConfig(final ClientConfig clientConfig) {
+	public final void setClientConfig(final ClientConfig clientConfig) {
 		/*
-		 * 1)
+		 * 1) NearCacheConfig
 		 */
 		final NearCacheConfig nearCacheConfig = new NearCacheConfig(mapName)
 				.setInMemoryFormat(InMemoryFormat.OBJECT) // Sets the data type used to store entries.
@@ -74,6 +75,16 @@ public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigur
 //				.setStoreInitialDelaySeconds(0)
 //				.setStoreIntervalSeconds(0);
 
+		/*
+		 * 3) Configure CompactSerializationConfig and attach to SerializationConfig
+		 */
+		clientConfig.getSerializationConfig()
+				.getCompactSerializationConfig()
+				.addSerializer(new SerializerEntityPersonProfile());
+
+		/*
+		 * 4) Attachs
+		 */
 		clientConfig.addNearCacheConfig(nearCacheConfig);
 	}
 }

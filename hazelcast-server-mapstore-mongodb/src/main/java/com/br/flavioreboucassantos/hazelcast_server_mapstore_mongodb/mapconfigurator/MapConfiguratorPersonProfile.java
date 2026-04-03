@@ -3,7 +3,6 @@ package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigu
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreEntityPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerEntityPersonProfile;
 import com.hazelcast.config.Config;
-import com.hazelcast.config.DataPersistenceConfig;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.IndexConfig;
@@ -53,7 +52,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		// If true and using write-behind, only the latest store operation on a key within the write-delay-seconds period will be reflected in the MapStore, coalescing multiple updates into one.
 		mapStoreConfig.setWriteCoalescing(true);
 		// Sets the initial entry loading mode, either LAZY (entries loaded when first accessed) or EAGER (all entries loaded on map initialization).
-		mapStoreConfig.setInitialLoadMode(InitialLoadMode.EAGER);
+		mapStoreConfig.setInitialLoadMode(InitialLoadMode.LAZY);
 		// A set of custom properties that can be passed to your MapStore implementation.
 //		mapStoreConfig.setProperty("quarkus.mongodb.hosts", "localhost:27017")
 //				.setProperty("quarkus.mongodb.database", "db_hzc_mapstore");
@@ -69,8 +68,8 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		/*
 		 * 2.1) DataPersistenceConfig
 		 */
-		final DataPersistenceConfig dataPersistenceConfig = new DataPersistenceConfig();
-		dataPersistenceConfig.setEnabled(true);
+//		final DataPersistenceConfig dataPersistenceConfig = new DataPersistenceConfig();
+//		dataPersistenceConfig.setEnabled(true);
 
 		/*
 		 * 2.2) Near Cache no MapConfig (Lado do Membro/Servidor)
@@ -82,7 +81,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		 * 2.9) Attachs
 		 */
 		// Attach DataPersistenceConfig
-		mapConfig.setDataPersistenceConfig(dataPersistenceConfig);
+//		mapConfig.setDataPersistenceConfig(dataPersistenceConfig);
 		// Add Index to Map
 		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
 		// Attach Store
@@ -121,7 +120,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		config.getSerializationConfig()
 				.setAllowOverrideDefaultSerializers(true)
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerEntityPersonProfile(mapName)); // To register an explicit serializer
+				.addSerializer(new SerializerEntityPersonProfile()); // To register an explicit serializer
 
 	}
 }

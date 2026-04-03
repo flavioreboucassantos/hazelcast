@@ -1,6 +1,6 @@
-package com.br.flavioreboucassantos.hazelcast_client_quarkus.entity;
+package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.dto.DTOPersonFact;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonFact;
 
 public class EntityPersonFact {
 
