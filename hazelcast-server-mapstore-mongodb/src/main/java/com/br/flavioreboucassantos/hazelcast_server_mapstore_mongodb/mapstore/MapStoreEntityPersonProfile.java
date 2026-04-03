@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.bsonentity.BsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
 import com.hazelcast.map.MapStore;
@@ -21,18 +21,18 @@ import com.mongodb.client.model.ReplaceOptions;
 
 import tools.jackson.databind.ObjectMapper;
 
-public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPersonProfile> {
+public final class MapStoreEntityPersonProfile implements MapStore<Long, EntityPersonProfile> {
 
-	private final ILogger LOG = Logger.getLogger(MapStoreBsonPersonProfile.class);
+	private final ILogger LOG = Logger.getLogger(MapStoreEntityPersonProfile.class);
 
-	private final MongoCollection<BsonPersonProfile> collection;
+	private final MongoCollection<EntityPersonProfile> collection;
 	private final MongoCollection<Document> collectionDocument;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final ReplaceOptions replaceOptionsUpsertTrue;
 
-	public MapStoreBsonPersonProfile(final MongoDatabase database) {
-		this.collection = database.getCollection("person_profile", BsonPersonProfile.class);
+	public MapStoreEntityPersonProfile(final MongoDatabase database) {
+		this.collection = database.getCollection("person_profile", EntityPersonProfile.class);
 		this.collectionDocument = database.getCollection("person_profile", Document.class);
 
 		ReplaceOptions replaceOptions = new ReplaceOptions();
@@ -40,7 +40,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	}
 
 	@Override
-	public BsonPersonProfile load(final Long key) {
+	public EntityPersonProfile load(final Long key) {
 
 		LOG.info("load:: " + key);
 
@@ -48,11 +48,11 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	}
 
 	@Override
-	public Map<Long, BsonPersonProfile> loadAll(final Collection<Long> keys) {
+	public Map<Long, EntityPersonProfile> loadAll(final Collection<Long> keys) {
 
 		LOG.info("loadAll::>> ");
 
-		Map<Long, BsonPersonProfile> map = collection.find(Filters.in("_id", keys))
+		Map<Long, EntityPersonProfile> map = collection.find(Filters.in("_id", keys))
 				.into(new ArrayList<>()) // Carrega os dados
 				.stream()
 				.collect(Collectors.toMap(b -> b.id, b -> b));
@@ -83,11 +83,10 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 			return (List<Long>) results.get(0).get("allKeys");
 		else
 			return List.of();
-
 	}
 
 	@Override
-	public void store(final Long key, final BsonPersonProfile value) {
+	public void store(final Long key, final EntityPersonProfile value) {
 
 		LOG.info("store:: " + key + value.toString());
 
@@ -101,7 +100,7 @@ public final class MapStoreBsonPersonProfile implements MapStore<Long, BsonPerso
 	}
 
 	@Override
-	public void storeAll(final Map<Long, BsonPersonProfile> map) {
+	public void storeAll(final Map<Long, EntityPersonProfile> map) {
 
 		LOG.info("storeAll:: " + map.toString());
 

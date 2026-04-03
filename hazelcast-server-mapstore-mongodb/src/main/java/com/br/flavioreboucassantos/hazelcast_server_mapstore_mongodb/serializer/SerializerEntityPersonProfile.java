@@ -1,21 +1,21 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.bsonentity.BsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
 import com.hazelcast.nio.serialization.compact.CompactReader;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
 import com.hazelcast.nio.serialization.compact.CompactWriter;
 
-public final class SerializerBsonPersonProfile implements CompactSerializer<BsonPersonProfile> {
+public final class SerializerEntityPersonProfile implements CompactSerializer<EntityPersonProfile> {
 
 	final String mapName;
 
-	public SerializerBsonPersonProfile(final String mapName) {
+	public SerializerEntityPersonProfile(final String mapName) {
 		this.mapName = mapName;
 	}
 
 	@Override
-	public BsonPersonProfile read(final CompactReader reader) {
-		return new BsonPersonProfile(
+	public EntityPersonProfile read(final CompactReader reader) {
+		return new EntityPersonProfile(
 				reader.readInt64("id"),
 				reader.readString("name"),
 				reader.readInt32("age"),
@@ -23,7 +23,7 @@ public final class SerializerBsonPersonProfile implements CompactSerializer<Bson
 	}
 
 	@Override
-	public void write(final CompactWriter writer, final BsonPersonProfile obj) {
+	public void write(final CompactWriter writer, final EntityPersonProfile obj) {
 		writer.writeInt64("id", obj.id);
 		writer.writeString("name", obj.name);
 		writer.writeInt32("age", obj.age);
@@ -31,8 +31,8 @@ public final class SerializerBsonPersonProfile implements CompactSerializer<Bson
 	}
 
 	@Override
-	public Class<BsonPersonProfile> getCompactClass() {
-		return BsonPersonProfile.class;
+	public Class<EntityPersonProfile> getCompactClass() {
+		return EntityPersonProfile.class;
 	}
 
 	@Override

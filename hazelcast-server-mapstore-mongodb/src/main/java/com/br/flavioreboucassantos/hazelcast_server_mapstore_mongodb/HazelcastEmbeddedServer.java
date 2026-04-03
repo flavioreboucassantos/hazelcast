@@ -5,9 +5,9 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.bsonentity.BsonPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorBsonPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreBsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_client_quarkus.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreEntityPersonProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -21,8 +21,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class HazelcastEmbeddedServer {
-	
-	static private final ILogger LOG = Logger.getLogger(MapStoreBsonPersonProfile.class);
+
+	static private final ILogger LOG = Logger.getLogger(MapStoreEntityPersonProfile.class);
 
 	static String mapNamePersonProfile;
 
@@ -61,8 +61,8 @@ public class HazelcastEmbeddedServer {
 		final Config config = new Config();
 		config.getJetConfig().setEnabled(true);
 
-		final MapConfiguratorBsonPersonProfile mapConfiguratorBsonPersonProfile = new MapConfiguratorBsonPersonProfile(database, mapNamePersonProfile);
-		mapConfiguratorBsonPersonProfile.setMapConfig(config);
+		final MapConfiguratorPersonProfile mapConfiguratorPersonProfile = new MapConfiguratorPersonProfile(database, mapNamePersonProfile);
+		mapConfiguratorPersonProfile.setMapConfig(config);
 
 		/*
 		 * Hazelcast.newHazelcastInstance
@@ -70,12 +70,12 @@ public class HazelcastEmbeddedServer {
 		HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
 		System.out.println("Hazelcast Member iniciado.");
 
-		IMap<Long, BsonPersonProfile> map = hz.getMap(mapNamePersonProfile);
-		final BsonPersonProfile bsonPersonProfile = map.get(100L);
-		
-		LOG.info(bsonPersonProfile.toString());
-		
-		map.put(100L, new BsonPersonProfile(100L, "nameTeste", 50, 1234567890L));
+		IMap<Long, EntityPersonProfile> map = hz.getMap(mapNamePersonProfile);
+		final EntityPersonProfile entityPersonProfile = map.get(100L);
+
+		LOG.info(entityPersonProfile.toString());
+
+		map.put(100L, new EntityPersonProfile(100L, "nameTeste", 50, 1234567890L));
 
 		// Mantém a JVM rodando
 		Thread.currentThread().join();

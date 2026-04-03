@@ -1,8 +1,9 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreBsonPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerBsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreEntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerEntityPersonProfile;
 import com.hazelcast.config.Config;
+import com.hazelcast.config.DataPersistenceConfig;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.IndexConfig;
@@ -15,14 +16,14 @@ import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
 import com.mongodb.client.MongoDatabase;
 
-public class MapConfiguratorBsonPersonProfile implements BaseMapConfigurator {
+public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 
-	private final ILogger LOG = Logger.getLogger(MapConfiguratorBsonPersonProfile.class);
+	private final ILogger LOG = Logger.getLogger(MapConfiguratorPersonProfile.class);
 
 	final MongoDatabase database;
 	final String mapName;
 
-	public MapConfiguratorBsonPersonProfile(final MongoDatabase database, final String mapName) {
+	public MapConfiguratorPersonProfile(final MongoDatabase database, final String mapName) {
 		this.database = database;
 		this.mapName = mapName;
 	}
@@ -42,7 +43,7 @@ public class MapConfiguratorBsonPersonProfile implements BaseMapConfigurator {
 		 */
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		// Sets the map store implementation object
-		mapStoreConfig.setImplementation(new MapStoreBsonPersonProfile(database));
+		mapStoreConfig.setImplementation(new MapStoreEntityPersonProfile(database));
 		// Enabled for map
 		mapStoreConfig.setEnabled(true);
 		// The time in seconds to wait before writing entries to the data store (write-behind). A value of 0 means write-through.
@@ -64,16 +65,28 @@ public class MapConfiguratorBsonPersonProfile implements BaseMapConfigurator {
 		 */
 		// Set to enable/disable map level statistics for this map
 		mapConfig.setStatisticsEnabled(true);
+
+		/*
+		 * 2.1) DataPersistenceConfig
+		 */
+		final DataPersistenceConfig dataPersistenceConfig = new DataPersistenceConfig();
+		dataPersistenceConfig.setEnabled(true);
+
+		/*
+		 * 2.2) Near Cache no MapConfig (Lado do Membro/Servidor)
+		 * - Quando configurado no membro, o Near Cache é populado nos nós do cluster.
+		 * - Isso é útil para lite members ou caches locais em servidores que acessam dados de outros membros.
+		 */
+
+		/*
+		 * 2.9) Attachs
+		 */
+		// Attach DataPersistenceConfig
+		mapConfig.setDataPersistenceConfig(dataPersistenceConfig);
 		// Add Index to Map
 		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
 		// Attach Store
 		mapConfig.setMapStoreConfig(mapStoreConfig);
-
-		/*
-		 * 2.1) Near Cache no MapConfig (Lado do Membro/Servidor)
-		 * - Quando configurado no membro, o Near Cache é populado nos nós do cluster.
-		 * - Isso é útil para lite members ou caches locais em servidores que acessam dados de outros membros.
-		 */
 
 		/*
 		 * 3) Configure EvictionConfig and attach to MapConfig
@@ -103,10 +116,10 @@ public class MapConfiguratorBsonPersonProfile implements BaseMapConfigurator {
 		 */
 //		config.getSerializationConfig()
 //				.getCompactSerializationConfig()
-//				.addClass(BsonPersonProfile.class);
+//				.addClass(EntityPersonProfile.class);
 
 		config.getSerializationConfig()
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerBsonPersonProfile(mapName));
+				.addSerializer(new SerializerEntityPersonProfile(mapName));
 	}
 }
