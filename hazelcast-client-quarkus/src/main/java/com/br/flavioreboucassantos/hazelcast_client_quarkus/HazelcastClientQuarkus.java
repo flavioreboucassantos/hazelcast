@@ -11,7 +11,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 
 @QuarkusMain
-public class HazelcastQuarkusMapStoreMongoDB {
+public class HazelcastClientQuarkus {
 
 	public static void main(String... args) {
 

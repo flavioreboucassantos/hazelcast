@@ -93,7 +93,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>entity-person-etc</id> <!-- mvn jar:jar@entity-person-etc -->
+						<id>entity-person-etc</id> <!-- mvn clean jar:jar@entity-person-etc -->
 						<!-- 
 							Fases Principais do Ciclo de Vida Padrão
 							
@@ -121,7 +121,7 @@
 				<version>3.1.4</version>
 				<executions>
 					<execution>
-						<id>entity-person-etc</id> <!-- mvn install:install-file@entity-person-etc -->
+						<id>entity-person-etc</id> <!-- mvn clean install:install-file@entity-person-etc -->
 						<phase>install</phase>
 						<!--
 							The plugin itself contains three primary goals: 
