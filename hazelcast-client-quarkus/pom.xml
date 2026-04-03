@@ -76,14 +76,14 @@
 
 	<build>
 		<plugins>
-			<!-- CREATE ENTITY & DTO JAR -->
+			<!-- CREATE JAR entity-person-etc -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.5.0</version>
 				<configuration>
 					<outputDirectory>${project.basedir}/../shared-library</outputDirectory>
-					<finalName>entity-dto-shared</finalName>
+					<finalName>entity-person-etc</finalName>
 					<includes>
 						<include>
 							com/br/flavioreboucassantos/hazelcast_client_quarkus/entity/**</include>
@@ -93,7 +93,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>jar-entity-dto-shared</id>
+						<id>entity-person-etc</id> <!-- mvn jar:jar@entity-person-etc -->
 						<!-- 
 							Fases Principais do Ciclo de Vida Padrão
 							
@@ -106,10 +106,39 @@
 							- install: Instala o pacote no repositório local (.m2), para que possa ser usado como dependência em outros projetos locais.
 							- deploy: Copia o pacote final para o repositório remoto para compartilhamento com outros desenvolvedores ou projetos.
 						-->
-						<phase>package</phase>
+						<phase>validate</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- INSTALL JAR entity-person-etc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.1.4</version>
+				<executions>
+					<execution>
+						<id>entity-person-etc</id> <!-- mvn install:install-file@entity-person-etc -->
+						<phase>install</phase>
+						<!--
+							The plugin itself contains three primary goals: 
+							- install:install: The standard goal used during the build lifecycle. It automatically installs the project's main artifact (e.g., JAR, WAR), its POM, and any attached artifacts (sources, javadoc) into the local repository.
+							- install:install-file: Used to manually install an external artifact (not built by the current Maven project) into the local repository.
+							- install:help: Displays help and parameter information for the Install Plugin.
+						-->
+						<goals>
+							<goal>install-file</goal> <!-- Objetivo (goal) específico -->
+						</goals>
+						<configuration>
+							<file>${project.basedir}/../shared-library/entity-person-etc.jar</file>
+							<groupId>com.br.flavioreboucassantos.hazelcast-shared-library</groupId>
+							<artifactId>entity-person-etc</artifactId>
+							<version>1.0.0</version>
+							<packaging>jar</packaging>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
