@@ -61,6 +61,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.br.flavioreboucassantos.hazelcast-shared-library</groupId>
+			<artifactId>entity-person-etc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
