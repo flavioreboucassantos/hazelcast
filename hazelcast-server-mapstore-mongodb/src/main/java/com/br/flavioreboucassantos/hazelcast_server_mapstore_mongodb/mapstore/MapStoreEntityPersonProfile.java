@@ -1,7 +1,6 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import com.hazelcast.map.MapStore;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.ReplaceOptions;
 
 import tools.jackson.databind.ObjectMapper;
@@ -29,6 +29,7 @@ public final class MapStoreEntityPersonProfile implements MapStore<Long, EntityP
 	private final MongoCollection<Document> collectionDocument;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
+	private final Bson projectionIncludeId = Projections.include("_id");
 	private final ReplaceOptions replaceOptionsUpsertTrue;
 
 	public MapStoreEntityPersonProfile(final MongoDatabase database) {
@@ -67,22 +68,15 @@ public final class MapStoreEntityPersonProfile implements MapStore<Long, EntityP
 
 		LOG.info("loadAllKeys>> ");
 
-		// Pipeline de Agregação
-		final List<Bson> pipeline = Arrays.asList(
-				// 1. Converte o documento para um array de chave-valor: [{k: "chave", v: "valor"}]
-				new Document("$project", new Document("arrayOfKeyValues", new Document("$objectToArray", "$$ROOT"))),
-				// 2. Desenrola o array para processar cada chave
-				new Document("$unwind", "$arrayOfKeyValues"),
-				// 3. Agrupa por chave e obtém apenas as chaves únicas
-				new Document("$group", new Document("_id", null).append("allKeys", new Document("$addToSet", "$arrayOfKeyValues.k"))));
+		final List<Long> ids = new ArrayList<>();
+		collection.find()
+				.projection(projectionIncludeId)
+				.map(doc -> doc.id) // Converte ObjectId para String
+				.into(ids);
 
-		// Executa a agregação
-		final List<Document> results = collectionDocument.aggregate(pipeline).into(new ArrayList<>());
+		LOG.info("loadAllKeys:: " + ids.toString());
 
-		if (!results.isEmpty())
-			return (List<Long>) results.get(0).get("allKeys");
-		else
-			return List.of();
+		return ids;
 	}
 
 	@Override

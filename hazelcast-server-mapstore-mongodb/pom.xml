@@ -30,7 +30,7 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- HAZELCAST CORE MODULE -->
+		<!-- HAZELCAST MODULES -->
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
@@ -83,12 +83,12 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				
+
 				<!-- PLUGINS USED WITH NEWER VERSIONS -->
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.5.0</version>
-				</plugin>				
+				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.5.0</version>
@@ -97,7 +97,7 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.15.0</version>
 				</plugin>
-			
+
 				<!-- CREATE JAR SETTING mainClass, include dependencies and configurations of assembly.xml -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -123,8 +123,8 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>						
-				
+				</plugin>
+
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.3.0</version>

@@ -116,10 +116,12 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		 */
 //		config.getSerializationConfig()
 //				.getCompactSerializationConfig()
-//				.addClass(EntityPersonProfile.class);
+//				.addClass(EntityPersonProfile.class); // To register a class for zero-config (reflection-based)
 
 		config.getSerializationConfig()
+				.setAllowOverrideDefaultSerializers(true)
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerEntityPersonProfile(mapName));
+				.addSerializer(new SerializerEntityPersonProfile(mapName)); // To register an explicit serializer
+
 	}
 }

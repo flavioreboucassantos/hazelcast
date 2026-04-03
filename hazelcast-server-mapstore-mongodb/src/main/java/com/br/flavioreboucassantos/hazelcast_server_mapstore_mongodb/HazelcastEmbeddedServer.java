@@ -70,7 +70,7 @@ public class HazelcastEmbeddedServer {
 		HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
 		System.out.println("Hazelcast Member iniciado.");
 
-//		IMap<Long, EntityPersonProfile> map = hz.getMap(mapNamePersonProfile);
+		IMap<Long, EntityPersonProfile> mapEntityPersonProfile = hz.getMap(mapNamePersonProfile);
 //		final EntityPersonProfile entityPersonProfile = map.get(100L);
 //		LOG.info("\n\n\n" + entityPersonProfile.toString() + "\n\n\n");
 //		map.put(100L, new EntityPersonProfile(100L, "nameTeste", 50, 1234567890L));
