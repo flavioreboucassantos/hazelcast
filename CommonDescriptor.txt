@@ -21,10 +21,20 @@
 
 # COMANDOS PROD
 
-	"Empacota sem testes."
-	mvn clean package -DskipTests
-	mvnw clean package -DskipTests
-	java -jar target\quarkus-app\quarkus-run.jar ### Executa pacote de PRODUÇÃO.
+	- Use o formato plugin:goal@executionId
+
+	Para hazelcast-client-quarkus:
+		"Empacota sem testes."
+		mvn clean package -DskipTests
+		mvnw clean package -DskipTests
+		java -jar target\quarkus-app\quarkus-run.jar ### Executa pacote de PRODUÇÃO.
+		
+		Criar Jar entity-person-etc:
+			mvn clean jar:jar@entity-person-etc
+		
+		Intalar Jar entity-person-etc:
+			mvn clean install:install-file@entity-person-etc
 	
-	Executar apenas a execução específica via CLI:
-	Se você quiser pular o JAR padrão e gerar apenas o JAR da execução específica, use o formato plugin:goal@executionId
+	Para hazelcast-server-mapstore-mongodb:
+		mvn clean compile assembly:single@make-assembly -DskipTests
+		java -jar target\hazelcast-server-mapstore-mongodb-0.0.1-SNAPSHOT-jar-with-dependencies.jar ### Executa pacote de PRODUÇÃO.

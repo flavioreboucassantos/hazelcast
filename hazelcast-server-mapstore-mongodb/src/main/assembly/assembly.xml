@@ -1,0 +1,52 @@
+<assembly xmlns="http://apache.org" xmlns:xsi="http://w3.org" xsi:schemaLocation="http://apache.org http://apache.org">
+
+	<!-- ID para diferenciar o artefato gerado (ex: meu-app-jar-com-dependencias.jar) -->
+	<id>jar-with-dependencies</id>
+
+	<!-- Formato de saída -->
+	<formats>
+		<format>jar</format>
+	</formats>
+
+	<!-- Define se inclui o JAR principal do projeto -->
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>true</useProjectArtifact>
+
+			<!-- A mágica está aqui: descompacta os JARs das dependências -->
+			<unpack>true</unpack>
+			<!--
+			Inclui apenas arquivos compilados (.class), ignora META-INF das dependências 
+			<unpackOptions>
+				<excludes>
+					<exclude>META-INF/**</exclude>
+				</excludes>
+			</unpackOptions>
+			-->
+			
+			<!-- Coloca os arquivos .class descompactados na raiz do JAR final. -->
+			<outputDirectory>/</outputDirectory>
+
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+
+	<fileSets>
+		<fileSet>
+			<!-- Define que vamos usar o diretório de classes compiladas -->
+			<directory>${project.build.outputDirectory}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<!-- Inclui apenas arquivos .class e recursos (properties, xml) -->
+				<include>**/*.class</include>
+				<include>**/*.properties</include>
+				<include>**/*.xml</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+
+	<!-- Opcional: Incluir arquivos de config, scripts, doc, etc -->
+	<!-- <fileSets> <fileSet> <directory>${project.basedir}/config</directory> <outputDirectory>config</outputDirectory> <includes> <include>*.properties</include> </includes> </fileSet> </fileSets> -->
+</assembly>
