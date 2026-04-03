@@ -15,7 +15,10 @@
 
 	mvnw quarkus:list-extensions
 	mvnw quarkus:update
-	mvnw clean test ### Use "-Dtest=ClassName" or Add "Test" to the Class Name.
+	
+	# Use "-Dtest=ClassName" or Add "Test" to the Class Name.
+	mvnw clean test
+	
 	mvnw clean compile quarkus:dev
 	mvnw clean compile quarkus:dev -Dquarkus.profile=PROFILE_NAME		
 
@@ -27,14 +30,14 @@
 		"Empacota sem testes."
 		mvn clean package -DskipTests
 		mvnw clean package -DskipTests
-		java -jar target\quarkus-app\quarkus-run.jar ### Executa pacote de PRODUÇÃO.
+		java -jar target\quarkus-app\quarkus-run.jar
 		
-		Criar Jar entity-person-etc:
-			mvn clean jar:jar@entity-person-etc
+		CREATE JAR entity-person-etc
+			mvn clean compile jar:jar@entity-person-etc
 		
-		Intalar Jar entity-person-etc:
-			mvn clean install:install-file@entity-person-etc
+		INSTALL JAR entity-person-etc
+			mvn install:install-file@entity-person-etc
 	
 	Para hazelcast-server-mapstore-mongodb:
 		mvn clean compile assembly:single@make-assembly -DskipTests
-		java -jar target\hazelcast-server-mapstore-mongodb-0.0.1-SNAPSHOT-jar-with-dependencies.jar ### Executa pacote de PRODUÇÃO.
+		java -jar target\hazelcast-server-mapstore-mongodb-0.0.1-SNAPSHOT-jar-with-dependencies.jar 

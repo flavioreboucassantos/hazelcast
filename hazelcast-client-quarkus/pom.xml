@@ -85,10 +85,9 @@
 					<outputDirectory>${project.basedir}/../shared-library</outputDirectory>
 					<finalName>entity-person-etc</finalName>
 					<includes>
-						<include>
-							com/br/flavioreboucassantos/hazelcast_client_quarkus/entity/**</include>
-						<include>
-							com/br/flavioreboucassantos/hazelcast_client_quarkus/dto/**</include>
+						<include>com/br/flavioreboucassantos/hazelcast_client_quarkus/entity/**</include>
+						<include>com/br/flavioreboucassantos/hazelcast_client_quarkus/dto/**</include>
+						<include>com/br/flavioreboucassantos/hazelcast_client_quarkus/comparator/**</include>
 					</includes>
 				</configuration>
 				<executions>
@@ -106,7 +105,7 @@
 							- install: Instala o pacote no repositório local (.m2), para que possa ser usado como dependência em outros projetos locais.
 							- deploy: Copia o pacote final para o repositório remoto para compartilhamento com outros desenvolvedores ou projetos.
 						-->
-						<phase>validate</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>

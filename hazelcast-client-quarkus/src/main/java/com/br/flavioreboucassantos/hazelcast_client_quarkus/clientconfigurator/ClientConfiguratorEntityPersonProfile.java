@@ -22,7 +22,7 @@ public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigur
 	final String mapName;
 
 	@Inject
-	public ClientConfiguratorEntityPersonProfile(@ConfigProperty(name = "myApp.hazelcast.EntityPersonProfile.mapName") final String mapName) {
+	public ClientConfiguratorEntityPersonProfile(@ConfigProperty(name = "myApp.hazelcast.PersonProfile.mapName") final String mapName) {
 		this.mapName = mapName;
 	}
 

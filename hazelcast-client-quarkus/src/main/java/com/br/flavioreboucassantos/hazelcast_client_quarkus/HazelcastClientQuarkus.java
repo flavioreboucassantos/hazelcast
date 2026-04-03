@@ -21,7 +21,7 @@ public class HazelcastClientQuarkus {
 	@Inject
 	HazelcastInstance hazelcastInstance;
 
-	@ConfigProperty(name = "myApp.hazelcast.EntityPersonProfile.mapName")
+	@ConfigProperty(name = "myApp.hazelcast.PersonProfile.mapName")
 	String mapName;
 
 	void onStart(@Observes StartupEvent ev) {
