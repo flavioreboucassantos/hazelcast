@@ -1,0 +1,30 @@
+# AMBIENTE
+
+	JDK 25
+	<quarkus.platform.version>3.34.1</quarkus.platform.version>
+	<com.hazelcast:hazelcast:5.6.0>
+	<org.mongodb:mongodb-driver-sync:5.6.4>
+
+# Environment Variable
+
+	QUARKUS_PROFILE=PROFILE_NAME	
+	"A profile aware file is only loaded if the unprofiled application.properties is also available in the same location and the file extension matches between the files.
+	This is required to keep a consistent loading order and pair all the resources together."
+	
+# COMANDOS DEV
+
+	mvnw quarkus:list-extensions
+	mvnw quarkus:update
+	mvnw clean test ### Use "-Dtest=ClassName" or Add "Test" to the Class Name.
+	mvnw clean compile quarkus:dev
+	mvnw clean compile quarkus:dev -Dquarkus.profile=PROFILE_NAME		
+
+# COMANDOS PROD
+
+	"Empacota sem testes."
+	mvn clean package -DskipTests
+	mvnw clean package -DskipTests
+	java -jar target\quarkus-app\quarkus-run.jar ### Executa pacote de PRODUÇÃO.
+	
+	Executar apenas a execução específica via CLI:
+	Se você quiser pular o JAR padrão e gerar apenas o JAR da execução específica, use o formato plugin:goal@executionId
