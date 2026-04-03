@@ -21,14 +21,14 @@ public class HazelcastQuarkusMapStoreMongoDB {
 	@Inject
 	HazelcastInstance hazelcastInstance;
 
-	@ConfigProperty(name = "myApp.hazelcast.BsonPersonProfile.mapName")
+	@ConfigProperty(name = "myApp.hazelcast.EntityPersonProfile.mapName")
 	String mapName;
 
 	void onStart(@Observes StartupEvent ev) {
-//		IMap<String, BsonPersonProfile> map = hazelcastInstance.getMap(mapName);
+//		IMap<String, EntityPersonProfile> map = hazelcastInstance.getMap(mapName);
 //		map.destroy();
 //		map = hazelcastInstance.getMap(mapName);
-//		map.put("recreate", new BsonPersonProfile());
+//		map.put("recreate", new EntityPersonProfile());
 //		map.clear();
 	}
 

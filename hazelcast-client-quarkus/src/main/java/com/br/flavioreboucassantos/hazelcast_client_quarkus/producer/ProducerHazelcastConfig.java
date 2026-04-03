@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.br.flavioreboucassantos.hazelcast_client_quarkus.clientconfigurator.BaseClientConfigurator;
-import com.br.flavioreboucassantos.hazelcast_client_quarkus.clientconfigurator.ClientConfiguratorBsonPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_client_quarkus.clientconfigurator.ClientConfiguratorEntityPersonProfile;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.HazelcastInstance;
@@ -25,10 +25,10 @@ public class ProducerHazelcastConfig {
 	final List<BaseClientConfigurator> listBaseClientConfigurator = new ArrayList<BaseClientConfigurator>();
 
 	@Inject
-	public ProducerHazelcastConfig(final ClientConfiguratorBsonPersonProfile clientConfiguratorBsonPersonProfile) {
+	public ProducerHazelcastConfig(final ClientConfiguratorEntityPersonProfile clientConfiguratorEntityPersonProfile) {
 		clientConfig.setClusterName("dev");
 
-		listBaseClientConfigurator.add(clientConfiguratorBsonPersonProfile);
+		listBaseClientConfigurator.add(clientConfiguratorEntityPersonProfile);
 	}
 
 	@Produces

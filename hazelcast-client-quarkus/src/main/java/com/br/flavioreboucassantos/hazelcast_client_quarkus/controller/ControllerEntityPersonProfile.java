@@ -25,15 +25,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/person")
-public class ControllerBsonPersonProfile {
+public class ControllerEntityPersonProfile {
 
-	private final Logger LOG = LoggerFactory.getLogger(ControllerBsonPersonProfile.class);
+	private final Logger LOG = LoggerFactory.getLogger(ControllerEntityPersonProfile.class);
 
 	final HazelcastInstance hazelcastInstance;
 	final IMap<Long, EntityPersonProfile> mapPersonProfile;
 
 	@Inject
-	public ControllerBsonPersonProfile(
+	public ControllerEntityPersonProfile(
 			final HazelcastInstance hazelcastInstance,
 			@ConfigProperty(name = "myApp.hazelcast.PersonProfile.mapName") final String mapName) {
 		this.hazelcastInstance = hazelcastInstance;

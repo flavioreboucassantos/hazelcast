@@ -15,14 +15,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class ClientConfiguratorBsonPersonProfile implements BaseClientConfigurator {
+public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigurator {
 
-	private final Logger LOG = LoggerFactory.getLogger(ClientConfiguratorBsonPersonProfile.class);
+	private final Logger LOG = LoggerFactory.getLogger(ClientConfiguratorEntityPersonProfile.class);
 
 	final String mapName;
 
 	@Inject
-	public ClientConfiguratorBsonPersonProfile(@ConfigProperty(name = "myApp.hazelcast.BsonPersonProfile.mapName") final String mapName) {
+	public ClientConfiguratorEntityPersonProfile(@ConfigProperty(name = "myApp.hazelcast.EntityPersonProfile.mapName") final String mapName) {
 		this.mapName = mapName;
 	}
 

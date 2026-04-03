@@ -37,7 +37,7 @@ public class EntryProcessorPersonProfile implements EntryProcessor<Long, EntityP
 
 	@Override
 	public Object process(final Entry<Long, EntityPersonProfile> entry) {
-//		entry.setValue(new BsonPerson(entry.getValue(), System.currentTimeMillis()));
+//		entry.setValue(new Person(entry.getValue(), System.currentTimeMillis()));
 		return true; // A result that will be returned from the method taking the EntryProcessor, such as IMap.executeOnKey()
 	}
 

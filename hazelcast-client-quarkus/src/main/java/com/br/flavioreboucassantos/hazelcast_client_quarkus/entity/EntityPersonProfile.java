@@ -12,9 +12,7 @@ public final class EntityPersonProfile {
 
 	public long tsCreated;
 
-	/*
-	 * Please ensure the class has a public, empty constructor with no arguments, or else a constructor with a BsonCreator annotation.
-	 */
+	// Please ensure the class has a public, empty constructor with no arguments, or else a constructor with a BsonCreator annotation
 	public EntityPersonProfile() {
 	}
 
@@ -27,8 +25,8 @@ public final class EntityPersonProfile {
 
 	/**
 	 *
-	 * @param dtoBsonPersonProfile
-	 * @param tsCreated            is the Timestamp of the Creation.
+	 * @param dtoEntityPersonProfile
+	 * @param tsCreated              is the Timestamp of the Creation.
 	 */
 	public EntityPersonProfile(final DTOPersonProfile dtoPersonProfile, final long tsCreated) {
 		id = dtoPersonProfile.id();
