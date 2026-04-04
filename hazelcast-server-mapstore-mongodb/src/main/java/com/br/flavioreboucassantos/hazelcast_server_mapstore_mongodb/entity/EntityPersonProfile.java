@@ -38,38 +38,6 @@ public final class EntityPersonProfile {
 		this.tsCreated = tsCreated;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-	public long getTsCreated() {
-		return tsCreated;
-	}
-
-	public void setTsCreated(long tsCreated) {
-		this.tsCreated = tsCreated;
-	}
-
 	@Override
 	public String toString() {
 		return "EntityPersonProfile [id=" + id + ", name=" + name + ", age=" + age + ", tsCreated=" + tsCreated + "]";
