@@ -1,12 +1,9 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
-import org.bson.codecs.pojo.annotations.BsonId;
-
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonProfile;
 
 public final class EntityPersonProfile {
 
-	@BsonId
 	public long id;
 
 	public String name;
