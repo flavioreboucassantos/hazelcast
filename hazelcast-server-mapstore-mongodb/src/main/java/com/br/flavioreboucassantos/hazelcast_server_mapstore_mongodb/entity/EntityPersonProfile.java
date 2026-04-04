@@ -25,8 +25,8 @@ public final class EntityPersonProfile {
 
 	/**
 	 *
-	 * @param dtoEntityPersonProfile
-	 * @param tsCreated              is the Timestamp of the Creation.
+	 * @param dtoPersonProfile
+	 * @param tsCreated        is the Timestamp of the Creation.
 	 */
 	public EntityPersonProfile(final DTOPersonProfile dtoPersonProfile, final long tsCreated) {
 		id = dtoPersonProfile.id();

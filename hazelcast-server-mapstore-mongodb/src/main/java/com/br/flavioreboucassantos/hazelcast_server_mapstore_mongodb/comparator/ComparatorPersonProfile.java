@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 
-public final class ComparatorEntityPersonProfile implements Comparator<Entry<Long, EntityPersonProfile>>, Serializable {
+public final class ComparatorPersonProfile implements Comparator<Entry<Long, EntityPersonProfile>>, Serializable {
 	/**
 	 * 
 	 */

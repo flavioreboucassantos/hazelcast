@@ -6,7 +6,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.ComparatorEntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.ComparatorPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 import com.hazelcast.core.HazelcastInstance;
@@ -67,7 +67,7 @@ public class ControllerEntityPersonProfile {
 		 * Get the last two using tsCreated.
 		 * Selects only candidates between 18 and 65 years old.
 		 */
-		final PagingPredicate<Long, EntityPersonProfile> pagingPredicate = Predicates.pagingPredicate(filteringPredicate, new ComparatorEntityPersonProfile(), 2);
+		final PagingPredicate<Long, EntityPersonProfile> pagingPredicate = Predicates.pagingPredicate(filteringPredicate, new ComparatorPersonProfile(), 2);
 
 		Collection<EntityPersonProfile> result = mapPersonProfile.values(pagingPredicate);
 

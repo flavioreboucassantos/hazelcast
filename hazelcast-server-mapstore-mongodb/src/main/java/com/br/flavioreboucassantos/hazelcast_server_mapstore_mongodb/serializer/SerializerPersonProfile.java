@@ -7,14 +7,14 @@ import com.hazelcast.nio.serialization.compact.CompactReader;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
 import com.hazelcast.nio.serialization.compact.CompactWriter;
 
-public final class SerializerEntityPersonProfile implements CompactSerializer<EntityPersonProfile> {
+public final class SerializerPersonProfile implements CompactSerializer<EntityPersonProfile> {
 
-	private final ILogger LOG = Logger.getLogger(SerializerEntityPersonProfile.class);
+	private final ILogger LOG = Logger.getLogger(SerializerPersonProfile.class);
 
 	@Override
 	public EntityPersonProfile read(final CompactReader reader) {
 
-		LOG.info("SerializerEntityPersonProfile::read::name::" + reader.readString("name") + "\n\n\n");
+		LOG.info("SerializerPersonProfile::read::name::" + reader.readString("name") + "\n\n\n");
 
 		return new EntityPersonProfile(
 				reader.readInt64("id"),
@@ -26,7 +26,7 @@ public final class SerializerEntityPersonProfile implements CompactSerializer<En
 	@Override
 	public void write(final CompactWriter writer, final EntityPersonProfile obj) {
 
-		LOG.info("SerializerEntityPersonProfile::write::name::" + obj.name + "\n\n\n");
+		LOG.info("SerializerPersonProfile::write::name::" + obj.name + "\n\n\n");
 
 		writer.writeInt64("id", obj.id);
 		writer.writeString("name", obj.name);

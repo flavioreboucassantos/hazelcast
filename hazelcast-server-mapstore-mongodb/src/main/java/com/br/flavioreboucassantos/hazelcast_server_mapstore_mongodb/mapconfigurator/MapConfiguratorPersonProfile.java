@@ -1,7 +1,7 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreEntityPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerEntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerPersonProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
@@ -42,7 +42,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		 */
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		// Sets the map store implementation object
-		mapStoreConfig.setImplementation(new MapStoreEntityPersonProfile(database));
+		mapStoreConfig.setImplementation(new MapStorePersonProfile(database));
 		// Enabled for map
 		mapStoreConfig.setEnabled(true);
 		// The time in seconds to wait before writing entries to the data store (write-behind). A value of 0 means write-through.
@@ -120,7 +120,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		config.getSerializationConfig()
 				.setAllowOverrideDefaultSerializers(true)
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerEntityPersonProfile()); // To register an explicit serializer
+				.addSerializer(new SerializerPersonProfile()); // To register an explicit serializer
 
 	}
 }

@@ -59,9 +59,9 @@ public final class ConsumerKafka {
 		streamSource = KafkaSources.kafka(props, (FunctionEx<ConsumerRecord<String, String>, String> & Serializable) consumerRecord -> projectionFn(consumerRecord), "webhookCallback");
 	}
 
-	public Pipeline startPipeline() {
+	public Pipeline createPipeline() {
 		final Pipeline pipeline = Pipeline.create();
-		final StreamSourceStage<String> streamSourceStage = pipeline.readFrom(streamSource);		
+		final StreamSourceStage<String> streamSourceStage = pipeline.readFrom(streamSource);
 
 		StreamStage<String> streamStage = streamSourceStage.withoutTimestamps();
 

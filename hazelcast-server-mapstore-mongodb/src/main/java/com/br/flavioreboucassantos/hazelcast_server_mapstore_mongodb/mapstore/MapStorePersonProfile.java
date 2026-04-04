@@ -21,9 +21,9 @@ import com.mongodb.client.model.ReplaceOptions;
 
 import tools.jackson.databind.ObjectMapper;
 
-public final class MapStoreEntityPersonProfile implements MapStore<Long, EntityPersonProfile> {
+public final class MapStorePersonProfile implements MapStore<Long, EntityPersonProfile> {
 
-	private final ILogger LOG = Logger.getLogger(MapStoreEntityPersonProfile.class);
+	private final ILogger LOG = Logger.getLogger(MapStorePersonProfile.class);
 
 	private final MongoCollection<EntityPersonProfile> collection;
 	private final MongoCollection<Document> collectionDocument;
@@ -32,7 +32,7 @@ public final class MapStoreEntityPersonProfile implements MapStore<Long, EntityP
 	private final Bson projectionIncludeId = Projections.include("_id");
 	private final ReplaceOptions replaceOptionsUpsertTrue;
 
-	public MapStoreEntityPersonProfile(final MongoDatabase database) {
+	public MapStorePersonProfile(final MongoDatabase database) {
 		this.collection = database.getCollection("person_profile", EntityPersonProfile.class);
 		this.collectionDocument = database.getCollection("person_profile", Document.class);
 

@@ -4,7 +4,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerEntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerPersonProfile;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
@@ -80,7 +80,7 @@ public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigur
 		 */
 		clientConfig.getSerializationConfig()
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerEntityPersonProfile());
+				.addSerializer(new SerializerPersonProfile());
 
 		/*
 		 * 4) Attachs

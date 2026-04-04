@@ -5,13 +5,11 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.kafka.ConsumerKafka;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreEntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
 import com.mongodb.ConnectionString;
@@ -22,7 +20,7 @@ import com.mongodb.client.MongoDatabase;
 
 public class HazelcastEmbeddedServer {
 
-	static private final ILogger LOG = Logger.getLogger(MapStoreEntityPersonProfile.class);
+	static private final ILogger LOG = Logger.getLogger(MapStorePersonProfile.class);
 
 	static String mapNamePersonProfile;
 
@@ -70,15 +68,14 @@ public class HazelcastEmbeddedServer {
 		HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
 		System.out.println("Hazelcast Member iniciado.");
 
-		final ConsumerKafka consumerKafka = new ConsumerKafka();
-		
-//		final Pipeline pipeline = consumerKafka.startPipeline();
+//		final ConsumerKafka consumerKafka = new ConsumerKafka();		
+//		final Pipeline pipeline = consumerKafka.createPipeline();
 //		hz.getJet().newJob(pipeline).join();
 
-//		IMap<Long, EntityPersonProfile> mapEntityPersonProfile = hz.getMap(mapNamePersonProfile);
-//		final EntityPersonProfile entityPersonProfile = mapEntityPersonProfile.get(100L);
+//		IMap<Long, EntityPersonProfile> mapPersonProfile = hz.getMap(mapNamePersonProfile);
+//		final EntityPersonProfile entityPersonProfile = mapPersonProfile.get(100L);
 //		LOG.info("\n\n\n" + entityPersonProfile.toString() + "\n\n\n");
-//		mapEntityPersonProfile.put(100L, new EntityPersonProfile(100L, "nameTeste", 50, 1234567890L));
+//		mapPersonProfile.put(100L, new EntityPersonProfile(100L, "nameTeste", 50, 1234567890L));
 
 		// Mantém a JVM rodando
 		Thread.currentThread().join();
