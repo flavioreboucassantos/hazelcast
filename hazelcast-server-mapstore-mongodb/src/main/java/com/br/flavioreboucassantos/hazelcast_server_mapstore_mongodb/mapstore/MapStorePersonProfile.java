@@ -19,22 +19,17 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.ReplaceOptions;
 
-import tools.jackson.databind.ObjectMapper;
-
 public final class MapStorePersonProfile implements MapStore<Long, EntityPersonProfile> {
 
 	private final ILogger LOG = Logger.getLogger(MapStorePersonProfile.class);
 
 	private final MongoCollection<EntityPersonProfile> collection;
-	private final MongoCollection<Document> collectionDocument;
-	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final Bson projectionIncludeId = Projections.include("_id");
 	private final ReplaceOptions replaceOptionsUpsertTrue;
 
 	public MapStorePersonProfile(final MongoDatabase database) {
 		this.collection = database.getCollection("person_profile", EntityPersonProfile.class);
-		this.collectionDocument = database.getCollection("person_profile", Document.class);
 
 		ReplaceOptions replaceOptions = new ReplaceOptions();
 		replaceOptionsUpsertTrue = replaceOptions.upsert(true);

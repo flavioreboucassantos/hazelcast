@@ -5,7 +5,7 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.kafka.ConsumerKafka;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.kafka.webhookcallback.ConsumerKafkaWebhookCallback;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
 import com.hazelcast.config.Config;
@@ -26,16 +26,7 @@ public class HazelcastEmbeddedServer {
 
 	static private final ILogger LOG = Logger.getLogger(MapStorePersonProfile.class);
 
-	static String mapNamePersonProfile;
-
-	public HazelcastEmbeddedServer() {
-		final ConfigLoader configLoader = new ConfigLoader();
-		mapNamePersonProfile = configLoader.getProperty("myApp.hazelcast.PersonProfile.mapName");
-	}
-
 	public static void main(String[] args) throws InterruptedException {
-		new HazelcastEmbeddedServer();
-
 		/*
 		 * MongoDB
 		 */
@@ -48,7 +39,7 @@ public class HazelcastEmbeddedServer {
 				CodecRegistries.fromProviders(pojoCodecProvider));
 
 		final ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017");
-		// 2. Build the settings object
+		// 3. Build the settings object
 		MongoClientSettings settings = MongoClientSettings.builder()
 				.applyConnectionString(connectionString)
 				.applicationName("HazelcastEmbeddedServer")
@@ -64,7 +55,7 @@ public class HazelcastEmbeddedServer {
 		config.getJetConfig().setEnabled(true);
 		config.getJetConfig().setResourceUploadEnabled(true);
 
-		final MapConfiguratorPersonProfile mapConfiguratorPersonProfile = new MapConfiguratorPersonProfile(database, mapNamePersonProfile);
+		final MapConfiguratorPersonProfile mapConfiguratorPersonProfile = new MapConfiguratorPersonProfile(database);
 		mapConfiguratorPersonProfile.setMapConfig(config);
 
 		/*
@@ -73,8 +64,8 @@ public class HazelcastEmbeddedServer {
 		HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
 		System.out.println("Hazelcast Member iniciado.");
 
-		final Pipeline pipeline = ConsumerKafka.createPipeline();
-		final JobConfig jobConfig = new JobConfig();
+		final Pipeline pipelineConsumerKafkaWebhookCallback = ConsumerKafkaWebhookCallback.createPipeline(hz);
+		final JobConfig jobConfigConsumerKafkaWebhookCallback = new JobConfig();
 		/*
 		 * Define quais garantias de processamento de mensagens são oferecidas em caso de falha.
 		 * Especificamente, se um membro do cluster sair do cluster durante a execução de uma tarefa e a tarefa for reiniciada automaticamente, define a semântica de em que ponto do fluxo a tarefa será retomada.
@@ -87,7 +78,7 @@ public class HazelcastEmbeddedServer {
 		 * A diferença entre AT_LEAST_ONCE e EXACTLY_ONCE é que, no modo AT_LEAST_ONCE, o processador pode continuar processando itens de entradas que já receberam a barreira.
 		 * Isso resulta em menor latência e maior taxa de transferência geral, com a ressalva de que alguns itens podem ser processados ​​duas vezes após uma reinicialização.
 		 */
-		jobConfig.setProcessingGuarantee(ProcessingGuarantee.EXACTLY_ONCE);
+		jobConfigConsumerKafkaWebhookCallback.setProcessingGuarantee(ProcessingGuarantee.EXACTLY_ONCE);
 		/*
 		 * Define o intervalo de captura de instantâneo em milissegundos — o intervalo entre a conclusão do instantâneo anterior e o início de um novo.
 		 * Deve ser definido com um valor positivo.
@@ -95,9 +86,9 @@ public class HazelcastEmbeddedServer {
 		 * 
 		 * O valor padrão é definido como 10 segundos.
 		 */
-		jobConfig.setSnapshotIntervalMillis(12000);
-//		jobConfig.addClass(ConsumerKafka.class);
-		hz.getJet().newJob(pipeline, jobConfig);
+		jobConfigConsumerKafkaWebhookCallback.setSnapshotIntervalMillis(12000);
+//		jobConfigConsumerKafka.addClass(ConsumerKafka.class);
+		hz.getJet().newJob(pipelineConsumerKafkaWebhookCallback, jobConfigConsumerKafkaWebhookCallback);
 
 		// Mantém a JVM rodando
 		Thread.currentThread().join();

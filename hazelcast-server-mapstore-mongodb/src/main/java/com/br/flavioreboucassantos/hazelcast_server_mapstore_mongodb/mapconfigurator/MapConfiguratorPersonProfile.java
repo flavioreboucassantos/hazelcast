@@ -1,5 +1,6 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.ConfigLoader;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerPersonProfile;
 import com.hazelcast.config.Config;
@@ -22,9 +23,9 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 	final MongoDatabase database;
 	final String mapName;
 
-	public MapConfiguratorPersonProfile(final MongoDatabase database, final String mapName) {
+	public MapConfiguratorPersonProfile(final MongoDatabase database) {
 		this.database = database;
-		this.mapName = mapName;
+		this.mapName = ConfigLoader.getProperty("myApp.hazelcast.PersonProfile.mapName");
 	}
 
 	@Override
