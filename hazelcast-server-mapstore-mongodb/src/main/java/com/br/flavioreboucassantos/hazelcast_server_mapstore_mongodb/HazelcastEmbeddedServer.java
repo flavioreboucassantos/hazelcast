@@ -26,10 +26,12 @@ public class HazelcastEmbeddedServer {
 
 	static private final ILogger LOG = Logger.getLogger(MapStorePersonProfile.class);
 
-	public static void main(String[] args) throws InterruptedException {
-		/*
-		 * MongoDB
-		 */
+	/*
+	 * MongoDB
+	 */
+	static private MongoDatabase database;
+
+	static {
 		// 1. Create a provider that automatically generates codecs for POJOs
 		final CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
 
@@ -46,22 +48,32 @@ public class HazelcastEmbeddedServer {
 				.codecRegistry(pojoCodecRegistry)// Apply the registry to your MongoClientSettings
 				.build();
 		MongoClient mongoClient = MongoClients.create(settings);
-		final MongoDatabase database = mongoClient.getDatabase("db_hzc_mapstore");
 
-		/*
-		 * Hazelcast MapConfig
-		 */
-		final Config config = new Config();
-		config.getJetConfig().setEnabled(true);
-		config.getJetConfig().setResourceUploadEnabled(true);
+		database = mongoClient.getDatabase("db_hzc_mapstore");
+	}
+
+	/*
+	 * Hazelcast MapConfig
+	 */
+	static private final Config hazelcastConfig = new Config();
+
+	static {
+		hazelcastConfig.getJetConfig().setEnabled(true);
+		hazelcastConfig.getJetConfig().setResourceUploadEnabled(true);
 
 		final MapConfiguratorPersonProfile mapConfiguratorPersonProfile = new MapConfiguratorPersonProfile(database);
-		mapConfiguratorPersonProfile.setMapConfig(config);
+		mapConfiguratorPersonProfile.setMapConfig(hazelcastConfig);
+	}
 
-		/*
-		 * Hazelcast.newHazelcastInstance
-		 */
-		HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
+	/*
+	 * Hazelcast.newHazelcastInstance
+	 */
+	static public final HazelcastInstance hz = Hazelcast.newHazelcastInstance(hazelcastConfig);
+
+	/*
+	 * Hazelcast Jet Jobs
+	 */
+	static {
 		System.out.println("Hazelcast Member iniciado.");
 
 		final Pipeline pipelineConsumerKafkaWebhookCallback = ConsumerKafkaWebhookCallback.createPipeline(hz);
@@ -90,7 +102,11 @@ public class HazelcastEmbeddedServer {
 //		jobConfigConsumerKafka.addClass(ConsumerKafka.class);
 		hz.getJet().newJob(pipelineConsumerKafkaWebhookCallback, jobConfigConsumerKafkaWebhookCallback);
 
+	}
+
+	public static void main(String[] args) throws InterruptedException {
 		// Mantém a JVM rodando
 		Thread.currentThread().join();
+
 	}
 }

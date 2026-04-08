@@ -4,14 +4,15 @@ import com.hazelcast.function.FunctionEx;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
 
+/**
+ * mapFn:<br>
+ * A mapping stage which applies the given function to each input item independently and emits the function's result as the output item.<br>
+ * If the result is null , it emits nothing.<br>
+ * Therefore, this stage can be used to implement filtering semantics as well.
+ */
 public class MapFnWebhookCallback implements FunctionEx<String, String> {
 
-	/*
-	 * mapFn:
-	 * A mapping stage which applies the given function to each input item independently and emits the function's result as the output item.
-	 * If the result is null , it emits nothing.
-	 * Therefore, this stage can be used to implement filtering semantics as well.
-	 */
+	static private final long serialVersionUID = -655739658896381549L;
 
 	static private final ILogger LOG = Logger.getLogger(MapFnWebhookCallback.class);
 

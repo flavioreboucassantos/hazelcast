@@ -3,6 +3,7 @@ package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.kafka.webh
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.ConfigLoader;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.HazelcastEmbeddedServer;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityWaContactProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityWaMessage;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.jsonclass.webhookcallback.JSONWebHookCallback;
@@ -18,27 +19,22 @@ import com.hazelcast.map.IMap;
 
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * projectionFn:<br>
+ * Function to create output objects from the Kafka record.<br>
+ * If the projection returns a null for an item, that item will be filtered out.
+ */
 public class ProjectionFnWebhookCallback implements FunctionEx<ConsumerRecord<String, String>, String> {
 
-	/*
-	 * projectionFn:
-	 * Function to create output objects from the Kafka record.
-	 * If the projection returns a null for an item, that item will be filtered out.
-	 */
+	static private final long serialVersionUID = 8088628284213949111L;
 
 	static private final ILogger LOG = Logger.getLogger(ProjectionFnWebhookCallback.class);
 
 	static private final ObjectMapper objectMapper = new ObjectMapper();
 
-	static private HazelcastInstance hz;
-	static private IMap<Object, Object> mapWaContactProfile;
-	static private IMap<Object, Object> mapWaMessage;
-
-	public ProjectionFnWebhookCallback(final HazelcastInstance hz) {
-		this.hz = hz;
-		mapWaContactProfile = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaContactProfile.mapName"));
-		mapWaMessage = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaMessage.mapName"));
-	}
+	static private final HazelcastInstance hz = HazelcastEmbeddedServer.hz;
+	static private final IMap<Object, Object> mapWaContactProfile = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaContactProfile.mapName"));
+	static private final IMap<Object, Object> mapWaMessage = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaMessage.mapName"));
 
 	private void put(final EntityWaContactProfile entityWaContactProfile) {
 

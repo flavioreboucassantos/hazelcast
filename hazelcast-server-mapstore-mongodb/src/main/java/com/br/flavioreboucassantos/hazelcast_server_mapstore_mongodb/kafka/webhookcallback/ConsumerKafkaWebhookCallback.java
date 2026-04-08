@@ -30,7 +30,7 @@ public final class ConsumerKafkaWebhookCallback {
 		props.setProperty("auto.offset.reset", "earliest");
 		props.setProperty("group.id", UUID.randomUUID().toString());
 		props.setProperty("enable.auto.commit", "false");
-		final StreamSource<String> streamSource = KafkaSources.kafka(props, new ProjectionFnWebhookCallback(hz), "webhookCallback");
+		final StreamSource<String> streamSource = KafkaSources.kafka(props, new ProjectionFnWebhookCallback(), "webhookCallback");
 
 		final Pipeline pipeline = Pipeline.create();
 		final StreamSourceStage<String> streamSourceStage = pipeline.readFrom(streamSource);
