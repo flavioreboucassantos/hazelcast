@@ -41,7 +41,7 @@ public final class ProjectionFnWebhookCallback implements FunctionEx<ConsumerRec
 	}
 
 	private void put(final EntityWaMessage entityWaMessage) {
-		mapWaMessage.put(entityWaMessage.id, entityWaMessage);
+		mapWaMessage.putIfAbsent(entityWaMessage.id, entityWaMessage);
 	}
 
 	@Override
