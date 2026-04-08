@@ -1,8 +1,7 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
-public class EntityWaContactProfile {
+public final class EntityWaContactProfile extends BaseEntityLongId {
 
-	public long id;
 	public String name;
 
 	public EntityWaContactProfile() {

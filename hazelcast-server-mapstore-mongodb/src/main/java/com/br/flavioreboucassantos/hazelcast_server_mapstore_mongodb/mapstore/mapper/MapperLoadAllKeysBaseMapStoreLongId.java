@@ -1,4 +1,4 @@
-package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore;
+package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.BaseEntityLongId;
 import com.mongodb.Function;

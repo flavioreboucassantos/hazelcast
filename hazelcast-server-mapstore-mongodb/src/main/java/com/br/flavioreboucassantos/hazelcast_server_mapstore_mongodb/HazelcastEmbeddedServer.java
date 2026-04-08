@@ -7,7 +7,8 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.kafka.webhookcallback.ConsumerKafkaWebhookCallback;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorWaContactProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator.MapConfiguratorWaMessage;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -24,7 +25,7 @@ import com.mongodb.client.MongoDatabase;
 
 public class HazelcastEmbeddedServer {
 
-	static private final ILogger LOG = Logger.getLogger(MapStorePersonProfile.class);
+	static private final ILogger LOG = Logger.getLogger(HazelcastEmbeddedServer.class);
 
 	/*
 	 * MongoDB
@@ -61,7 +62,9 @@ public class HazelcastEmbeddedServer {
 		hazelcastConfig.getJetConfig().setEnabled(true);
 		hazelcastConfig.getJetConfig().setResourceUploadEnabled(true);
 
-		new MapConfiguratorPersonProfile().setMapConfig(database, hazelcastConfig);
+		new MapConfiguratorPersonProfile().setMapConfig(database, hazelcastConfig); // <----------
+		new MapConfiguratorWaContactProfile().setMapConfig(database, hazelcastConfig); // <----------
+		new MapConfiguratorWaMessage().setMapConfig(database, hazelcastConfig); // <----------
 	}
 
 	/*

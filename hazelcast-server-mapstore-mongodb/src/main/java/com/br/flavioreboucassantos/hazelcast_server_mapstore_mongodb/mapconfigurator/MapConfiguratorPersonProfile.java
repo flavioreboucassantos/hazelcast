@@ -1,7 +1,8 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.ConfigLoader;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.BaseMapStoreLongId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerPersonProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
@@ -12,19 +13,12 @@ import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.config.MaxSizePolicy;
-import com.hazelcast.logging.ILogger;
-import com.hazelcast.logging.Logger;
 import com.mongodb.client.MongoDatabase;
 
 public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 
-	private final ILogger LOG = Logger.getLogger(MapConfiguratorPersonProfile.class);
-
-	final String mapName;
-
-	public MapConfiguratorPersonProfile() {
-		this.mapName = ConfigLoader.getProperty("myApp.hazelcast.PersonProfile.mapName");
-	}
+	final String mapName = ConfigLoader.getProperty("mapName.PersonProfile"); // <----------
+	final String collectionName = ConfigLoader.getProperty("collectionName.PersonProfile"); // <----------
 
 	@Override
 	public String getMapName() {
@@ -41,7 +35,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		 */
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		// Sets the map store implementation object
-		mapStoreConfig.setImplementation(new MapStorePersonProfile(database, ConfigLoader.getProperty("myApp.hazelcast.PersonProfile.collectionName")));
+		mapStoreConfig.setImplementation(new BaseMapStoreLongId<>(EntityPersonProfile.class, database, collectionName)); // <----------
 		// Enabled for map
 		mapStoreConfig.setEnabled(true);
 		// The time in seconds to wait before writing entries to the data store (write-behind). A value of 0 means write-through.
@@ -119,7 +113,8 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		config.getSerializationConfig()
 				.setAllowOverrideDefaultSerializers(true)
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerPersonProfile()); // To register an explicit serializer
+				// To register an explicit serializer
+				.addSerializer(new SerializerPersonProfile()); // <----------
 
 	}
 }

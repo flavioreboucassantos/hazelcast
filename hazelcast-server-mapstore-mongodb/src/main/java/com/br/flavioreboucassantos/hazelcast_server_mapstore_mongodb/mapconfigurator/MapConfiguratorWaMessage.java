@@ -1,22 +1,24 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.ConfigLoader;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityWaContactProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.BaseMapStoreLongId;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerWaContactProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityWaMessage;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.BaseMapStoreStringId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerWaMessage;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.IndexConfig;
+import com.hazelcast.config.IndexType;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.config.MaxSizePolicy;
 import com.mongodb.client.MongoDatabase;
 
-public class MapConfiguratorWaContactProfile implements BaseMapConfigurator {
+public class MapConfiguratorWaMessage implements BaseMapConfigurator {
 
-	final String mapName = ConfigLoader.getProperty("mapName.WaContactProfile"); // <----------
-	final String collectionName = ConfigLoader.getProperty("collectionName.WaContactProfile"); // <----------
+	final String mapName = ConfigLoader.getProperty("mapName.WaMessage"); // <----------
+	final String collectionName = ConfigLoader.getProperty("collectionName.WaMessage"); // <----------
 
 	@Override
 	public String getMapName() {
@@ -28,7 +30,7 @@ public class MapConfiguratorWaContactProfile implements BaseMapConfigurator {
 		final MapConfig mapConfig = new MapConfig(mapName);
 
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
-		mapStoreConfig.setImplementation(new BaseMapStoreLongId<>(EntityWaContactProfile.class, database, collectionName)); // <----------
+		mapStoreConfig.setImplementation(new BaseMapStoreStringId<>(EntityWaMessage.class, database, collectionName)); // <----------
 		mapStoreConfig.setEnabled(true);
 		mapStoreConfig.setWriteDelaySeconds(12);
 		mapStoreConfig.setWriteBatchSize(100);
@@ -37,6 +39,8 @@ public class MapConfiguratorWaContactProfile implements BaseMapConfigurator {
 		mapConfig.setMapStoreConfig(mapStoreConfig);
 
 		mapConfig.setStatisticsEnabled(true);
+
+		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
 
 		final EvictionConfig evictionConfigMapConfig = new EvictionConfig();
 		evictionConfigMapConfig.setEvictionPolicy(EvictionPolicy.LFU);
@@ -49,7 +53,7 @@ public class MapConfiguratorWaContactProfile implements BaseMapConfigurator {
 		config.getSerializationConfig()
 				.setAllowOverrideDefaultSerializers(true)
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerWaContactProfile()); // <----------
+				.addSerializer(new SerializerWaMessage()); // <----------
 	}
 
 }

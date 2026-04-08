@@ -33,15 +33,15 @@ public final class ProjectionFnWebhookCallback implements FunctionEx<ConsumerRec
 	static private final ObjectMapper objectMapper = new ObjectMapper();
 
 	static private final HazelcastInstance hz = HazelcastEmbeddedServer.hz;
-	static private final IMap<Object, Object> mapWaContactProfile = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaContactProfile.mapName"));
-	static private final IMap<Object, Object> mapWaMessage = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaMessage.mapName"));
+	static private final IMap<Object, Object> mapWaContactProfile = hz.getMap(ConfigLoader.getProperty("mapName.WaContactProfile"));
+	static private final IMap<Object, Object> mapWaMessage = hz.getMap(ConfigLoader.getProperty("mapName.WaMessage"));
 
 	private void put(final EntityWaContactProfile entityWaContactProfile) {
 		mapWaContactProfile.put(entityWaContactProfile.id, entityWaContactProfile);
 	}
 
 	private void put(final EntityWaMessage entityWaMessage) {
-		mapWaMessage.putIfAbsent(entityWaMessage.id, entityWaMessage);
+		mapWaMessage.put(entityWaMessage.id, entityWaMessage);
 	}
 
 	@Override

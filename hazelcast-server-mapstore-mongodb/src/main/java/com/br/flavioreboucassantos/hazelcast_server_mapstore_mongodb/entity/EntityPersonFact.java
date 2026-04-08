@@ -2,9 +2,7 @@ package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonFact;
 
-public final class EntityPersonFact {
-
-	public long id;
+public final class EntityPersonFact extends BaseEntityLongId {
 
 	public long idPersonProfile;
 

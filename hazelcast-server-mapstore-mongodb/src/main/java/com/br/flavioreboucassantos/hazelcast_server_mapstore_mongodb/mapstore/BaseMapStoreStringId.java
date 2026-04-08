@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.BaseEntityLongId;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.KeyMapperLoadAllBaseMapStoreLongId;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.MapperLoadAllKeysBaseMapStoreLongId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.BaseEntityStringId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.KeyMapperLoadAllBaseMapStoreStringId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.MapperLoadAllKeysBaseMapStoreStringId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.ValueMapperLoadAllBaseMapStore;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Logger;
@@ -22,19 +22,19 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.ReplaceOptions;
 
-public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements MapStore<Long, V> {
-	private final ILogger LOG = Logger.getLogger(BaseMapStoreLongId.class);
+public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements MapStore<String, V> {
+	private final ILogger LOG = Logger.getLogger(BaseMapStoreStringId.class);
 
 	private final MongoCollection<V> collection;
 
 	private final Bson projectionIncludeId = Projections.include("_id");
 	private final ReplaceOptions replaceOptionsUpsertTrue;
 
-	private final KeyMapperLoadAllBaseMapStoreLongId<V> keyMapperLoadAllBaseMapStoreLongId = new KeyMapperLoadAllBaseMapStoreLongId<V>();
+	private final KeyMapperLoadAllBaseMapStoreStringId<V> keyMapperLoadAllBaseMapStoreStringId = new KeyMapperLoadAllBaseMapStoreStringId<V>();
 	private final ValueMapperLoadAllBaseMapStore<V> valueMapperLoadAllBaseMapStore = new ValueMapperLoadAllBaseMapStore<V>();
-	private final MapperLoadAllKeysBaseMapStoreLongId<V> mapperLoadAllKeysBaseMapStoreLongId = new MapperLoadAllKeysBaseMapStoreLongId<V>();
+	private final MapperLoadAllKeysBaseMapStoreStringId<V> mapperLoadAllKeysBaseMapStoreStringId = new MapperLoadAllKeysBaseMapStoreStringId<V>();
 
-	public BaseMapStoreLongId(final Class<V> clazz, final MongoDatabase database, final String collectionName) {
+	public BaseMapStoreStringId(final Class<V> clazz, final MongoDatabase database, final String collectionName) {
 		this.collection = database.getCollection(collectionName, clazz);
 
 		final ReplaceOptions replaceOptions = new ReplaceOptions();
@@ -42,7 +42,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public V load(final Long key) {
+	public V load(final String key) {
 
 		LOG.info("load:: " + key);
 
@@ -50,14 +50,14 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public Map<Long, V> loadAll(final Collection<Long> keys) {
+	public Map<String, V> loadAll(final Collection<String> keys) {
 
 		LOG.info("loadAll::>> ");
 
-		Map<Long, V> map = collection.find(Filters.in("_id", keys))
+		Map<String, V> map = collection.find(Filters.in("_id", keys))
 				.into(new ArrayList<V>()) // Carrega os dados
 				.stream()
-				.collect(Collectors.toMap(keyMapperLoadAllBaseMapStoreLongId, valueMapperLoadAllBaseMapStore));
+				.collect(Collectors.toMap(keyMapperLoadAllBaseMapStoreStringId, valueMapperLoadAllBaseMapStore));
 
 		LOG.info("loadAll:: " + keys.toString());
 
@@ -65,14 +65,14 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public Iterable<Long> loadAllKeys() {
+	public Iterable<String> loadAllKeys() {
 
 		LOG.info("loadAllKeys>> ");
 
-		final List<Long> ids = new ArrayList<Long>();
+		final List<String> ids = new ArrayList<String>();
 		collection.find()
 				.projection(projectionIncludeId)
-				.map(mapperLoadAllKeysBaseMapStoreLongId)
+				.map(mapperLoadAllKeysBaseMapStoreStringId)
 				.into(ids);
 
 		LOG.info("loadAllKeys:: " + ids.toString());
@@ -81,7 +81,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void store(final Long key, final V value) {
+	public void store(final String key, final V value) {
 
 		LOG.info("store:: " + key + value.toString());
 
@@ -95,7 +95,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void storeAll(final Map<Long, V> map) {
+	public void storeAll(final Map<String, V> map) {
 
 		LOG.info("storeAll:: " + map.toString());
 
@@ -103,7 +103,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void delete(final Long key) {
+	public void delete(final String key) {
 
 		LOG.info("delete:: " + key);
 
@@ -111,7 +111,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void deleteAll(final Collection<Long> keys) {
+	public void deleteAll(final Collection<String> keys) {
 
 		LOG.info("deleteAll:: " + keys);
 
