@@ -24,7 +24,7 @@ import tools.jackson.databind.ObjectMapper;
  * Function to create output objects from the Kafka record.<br>
  * If the projection returns a null for an item, that item will be filtered out.
  */
-public class ProjectionFnWebhookCallback implements FunctionEx<ConsumerRecord<String, String>, String> {
+public final class ProjectionFnWebhookCallback implements FunctionEx<ConsumerRecord<String, String>, String> {
 
 	static private final long serialVersionUID = 8088628284213949111L;
 
@@ -37,11 +37,11 @@ public class ProjectionFnWebhookCallback implements FunctionEx<ConsumerRecord<St
 	static private final IMap<Object, Object> mapWaMessage = hz.getMap(ConfigLoader.getProperty("myApp.hazelcast.WaMessage.mapName"));
 
 	private void put(final EntityWaContactProfile entityWaContactProfile) {
-
+		mapWaContactProfile.put(entityWaContactProfile.id, entityWaContactProfile);
 	}
 
 	private void put(final EntityWaMessage entityWaMessage) {
-
+		mapWaMessage.putIfAbsent(entityWaMessage.id, entityWaMessage);
 	}
 
 	@Override

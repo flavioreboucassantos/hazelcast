@@ -10,7 +10,7 @@ import com.hazelcast.logging.Logger;
  * If the result is null , it emits nothing.<br>
  * Therefore, this stage can be used to implement filtering semantics as well.
  */
-public class MapFnWebhookCallback implements FunctionEx<String, String> {
+public final class MapFnWebhookCallback implements FunctionEx<String, String> {
 
 	static private final long serialVersionUID = -655739658896381549L;
 

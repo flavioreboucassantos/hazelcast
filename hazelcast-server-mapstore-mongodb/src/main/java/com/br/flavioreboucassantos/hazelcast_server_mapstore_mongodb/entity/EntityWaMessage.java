@@ -2,12 +2,12 @@ package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
 public class EntityWaMessage {
 
-	String id;
-	String displayPhoneNumber;
-	String from;
-	String type;
-	String body;
-	long tsCreated;
+	public String id;
+	public String displayPhoneNumber;
+	public String from;
+	public String type;
+	public String body;
+	public long tsCreated;
 
 	public EntityWaMessage() {
 	}

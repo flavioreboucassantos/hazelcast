@@ -61,8 +61,7 @@ public class HazelcastEmbeddedServer {
 		hazelcastConfig.getJetConfig().setEnabled(true);
 		hazelcastConfig.getJetConfig().setResourceUploadEnabled(true);
 
-		final MapConfiguratorPersonProfile mapConfiguratorPersonProfile = new MapConfiguratorPersonProfile(database);
-		mapConfiguratorPersonProfile.setMapConfig(hazelcastConfig);
+		new MapConfiguratorPersonProfile().setMapConfig(database, hazelcastConfig);
 	}
 
 	/*
@@ -101,12 +100,10 @@ public class HazelcastEmbeddedServer {
 		jobConfigConsumerKafkaWebhookCallback.setSnapshotIntervalMillis(12000);
 //		jobConfigConsumerKafka.addClass(ConsumerKafka.class);
 		hz.getJet().newJob(pipelineConsumerKafkaWebhookCallback, jobConfigConsumerKafkaWebhookCallback);
-
 	}
 
 	public static void main(String[] args) throws InterruptedException {
 		// Mantém a JVM rodando
 		Thread.currentThread().join();
-
 	}
 }

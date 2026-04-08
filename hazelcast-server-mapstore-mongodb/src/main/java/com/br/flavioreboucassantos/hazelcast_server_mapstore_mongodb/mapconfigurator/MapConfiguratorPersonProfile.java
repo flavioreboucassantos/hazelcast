@@ -20,11 +20,9 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 
 	private final ILogger LOG = Logger.getLogger(MapConfiguratorPersonProfile.class);
 
-	final MongoDatabase database;
 	final String mapName;
 
-	public MapConfiguratorPersonProfile(final MongoDatabase database) {
-		this.database = database;
+	public MapConfiguratorPersonProfile() {
 		this.mapName = ConfigLoader.getProperty("myApp.hazelcast.PersonProfile.mapName");
 	}
 
@@ -34,7 +32,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 	}
 
 	@Override
-	public void setMapConfig(final Config config) {
+	public void setMapConfig(final MongoDatabase database, final Config config) {
 
 		final MapConfig mapConfig = new MapConfig(mapName);
 
@@ -43,7 +41,7 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 		 */
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		// Sets the map store implementation object
-		mapStoreConfig.setImplementation(new MapStorePersonProfile(database));
+		mapStoreConfig.setImplementation(new MapStorePersonProfile(database, ConfigLoader.getProperty("myApp.hazelcast.PersonProfile.collectionName")));
 		// Enabled for map
 		mapStoreConfig.setEnabled(true);
 		// The time in seconds to wait before writing entries to the data store (write-behind). A value of 0 means write-through.
