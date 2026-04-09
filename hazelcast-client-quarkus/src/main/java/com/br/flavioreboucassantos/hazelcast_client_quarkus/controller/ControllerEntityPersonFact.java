@@ -27,7 +27,7 @@ public class ControllerEntityPersonFact {
 
 	@Inject
 	public ControllerEntityPersonFact(final HazelcastInstance hazelcastInstance,
-			@ConfigProperty(name = "myApp.hazelcast.PersonProfile.mapName") final String mapName) {
+			@ConfigProperty(name = "mapName.PersonFact") final String mapName) {
 		this.hazelcastInstance = hazelcastInstance;
 		mapPersonProfile = hazelcastInstance.getMap(mapName);
 	}

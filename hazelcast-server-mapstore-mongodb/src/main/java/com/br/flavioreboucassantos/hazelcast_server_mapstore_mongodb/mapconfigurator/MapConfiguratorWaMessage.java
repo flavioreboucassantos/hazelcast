@@ -7,6 +7,7 @@ import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.IndexConfig;
 import com.hazelcast.config.IndexType;
 import com.hazelcast.config.MapConfig;
@@ -28,6 +29,8 @@ public class MapConfiguratorWaMessage implements BaseMapConfigurator {
 	@Override
 	public void setMapConfig(final MongoDatabase database, final Config config) {
 		final MapConfig mapConfig = new MapConfig(mapName);
+
+		mapConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
 
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		mapStoreConfig.setImplementation(new BaseMapStoreStringId<>(EntityWaMessage.class, database, collectionName)); // <----------

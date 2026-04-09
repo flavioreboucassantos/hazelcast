@@ -2,7 +2,7 @@ package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.m
 
 import java.util.function.Function;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.BaseEntityLongId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityLongId;
 
 public final class KeyMapperLoadAllBaseMapStoreLongId<T extends BaseEntityLongId> implements Function<T, Long> {
 

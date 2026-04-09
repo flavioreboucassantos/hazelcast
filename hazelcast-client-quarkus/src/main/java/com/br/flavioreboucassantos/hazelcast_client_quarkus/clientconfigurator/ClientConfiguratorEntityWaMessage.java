@@ -2,7 +2,7 @@ package com.br.flavioreboucassantos.hazelcast_client_quarkus.clientconfigurator;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerWaMessage;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
@@ -13,9 +13,9 @@ import com.hazelcast.config.NearCacheConfig;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigurator {
+public class ClientConfiguratorEntityWaMessage implements BaseClientConfigurator {
 
-	@ConfigProperty(name = "mapName.PersonProfile") // <----------
+	@ConfigProperty(name = "mapName.WaMessage") // <----------
 	String mapName;
 
 	@Override
@@ -72,6 +72,6 @@ public class ClientConfiguratorEntityPersonProfile implements BaseClientConfigur
 		 */
 		clientConfig.getSerializationConfig()
 				.getCompactSerializationConfig()
-				.addSerializer(new SerializerPersonProfile()); // <----------
+				.addSerializer(new SerializerWaMessage()); // <----------
 	}
 }

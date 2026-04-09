@@ -1,14 +1,13 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonFact;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityLongId;
 
 public final class EntityPersonFact extends BaseEntityLongId {
 
 	public long idPersonProfile;
 
 	public String description;
-
-	public long tsCreated;
 
 	public EntityPersonFact() {
 	}
@@ -29,7 +28,7 @@ public final class EntityPersonFact extends BaseEntityLongId {
 
 	@Override
 	public String toString() {
-		return "EntityPersonFact [id=" + id + ", idPersonProfile=" + idPersonProfile + ", description=" + description + ", tsCreated=" + tsCreated + "]";
+		return "EntityPersonFact [idPersonProfile=" + idPersonProfile + ", description=" + description + ", id=" + id + ", tsCreated=" + tsCreated + "]";
 	}
 
 }

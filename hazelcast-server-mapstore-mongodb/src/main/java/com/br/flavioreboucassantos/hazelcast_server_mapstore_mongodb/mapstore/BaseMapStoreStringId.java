@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.BaseEntityStringId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityStringId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.KeyMapperLoadAllBaseMapStoreStringId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.MapperLoadAllKeysBaseMapStoreStringId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.ValueMapperLoadAllBaseMapStore;
@@ -44,7 +44,7 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public V load(final String key) {
 
-		LOG.info("load:: " + key);
+		// LOG.info("load:: " + key);
 
 		return collection.find(Filters.eq("_id", key)).first();
 	}
@@ -52,14 +52,14 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public Map<String, V> loadAll(final Collection<String> keys) {
 
-		LOG.info("loadAll::>> ");
+		// LOG.info("\nloadAll::>>keys.size()=" + keys.size());
 
 		Map<String, V> map = collection.find(Filters.in("_id", keys))
 				.into(new ArrayList<V>()) // Carrega os dados
 				.stream()
 				.collect(Collectors.toMap(keyMapperLoadAllBaseMapStoreStringId, valueMapperLoadAllBaseMapStore));
 
-		LOG.info("loadAll:: " + keys.toString());
+		// LOG.info("loadAll:: " + keys.toString());
 
 		return map;
 	}
@@ -67,7 +67,7 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public Iterable<String> loadAllKeys() {
 
-		LOG.info("loadAllKeys>> ");
+		// LOG.info("loadAllKeys>> ");
 
 		final List<String> ids = new ArrayList<String>();
 		collection.find()
@@ -75,7 +75,9 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 				.map(mapperLoadAllKeysBaseMapStoreStringId)
 				.into(ids);
 
-		LOG.info("loadAllKeys:: " + ids.toString());
+		// LOG.info("loadAllKeys:: " + ids.toString());
+
+		LOG.info("\n\nloadAllKeys::ids.size()=" + ids.size());
 
 		return ids;
 	}
@@ -83,7 +85,7 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public void store(final String key, final V value) {
 
-		LOG.info("store:: " + key + value.toString());
+		// LOG.info("store:: " + key + value.toString());
 
 		try {
 
@@ -97,7 +99,7 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public void storeAll(final Map<String, V> map) {
 
-		LOG.info("storeAll:: " + map.toString());
+		// LOG.info("storeAll:: " + map.toString());
 
 		map.forEach(this::store);
 	}
@@ -105,7 +107,7 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public void delete(final String key) {
 
-		LOG.info("delete:: " + key);
+		// LOG.info("delete:: " + key);
 
 		collection.deleteOne(new Document("_id", key));
 	}
@@ -113,7 +115,7 @@ public final class BaseMapStoreStringId<V extends BaseEntityStringId> implements
 	@Override
 	public void deleteAll(final Collection<String> keys) {
 
-		LOG.info("deleteAll:: " + keys);
+		// LOG.info("deleteAll:: " + keys);
 
 		keys.forEach(this::delete);
 	}

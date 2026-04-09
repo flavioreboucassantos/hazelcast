@@ -6,7 +6,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.ComparatorPersonProfile;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.ComparatorLongIdTsCreatedDesc;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.dto.DTOPersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
 import com.hazelcast.core.HazelcastInstance;
@@ -32,10 +32,12 @@ public class ControllerEntityPersonProfile {
 	final HazelcastInstance hazelcastInstance;
 	final IMap<Long, EntityPersonProfile> mapPersonProfile;
 
+	final ComparatorLongIdTsCreatedDesc<EntityPersonProfile> comparatorLongIdTsCreatedDesc = new ComparatorLongIdTsCreatedDesc<EntityPersonProfile>();
+
 	@Inject
 	public ControllerEntityPersonProfile(
 			final HazelcastInstance hazelcastInstance,
-			@ConfigProperty(name = "myApp.hazelcast.PersonProfile.mapName") final String mapName) {
+			@ConfigProperty(name = "mapName.PersonProfile") final String mapName) {
 		this.hazelcastInstance = hazelcastInstance;
 		mapPersonProfile = hazelcastInstance.getMap(mapName);
 	}
@@ -67,7 +69,7 @@ public class ControllerEntityPersonProfile {
 		 * Get the last two using tsCreated.
 		 * Selects only candidates between 18 and 65 years old.
 		 */
-		final PagingPredicate<Long, EntityPersonProfile> pagingPredicate = Predicates.pagingPredicate(filteringPredicate, new ComparatorPersonProfile(), 2);
+		final PagingPredicate<Long, EntityPersonProfile> pagingPredicate = Predicates.pagingPredicate(filteringPredicate, comparatorLongIdTsCreatedDesc, 2);
 
 		Collection<EntityPersonProfile> result = mapPersonProfile.values(pagingPredicate);
 

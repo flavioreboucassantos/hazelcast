@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.BaseEntityLongId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityLongId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.KeyMapperLoadAllBaseMapStoreLongId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.MapperLoadAllKeysBaseMapStoreLongId;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.mapper.ValueMapperLoadAllBaseMapStore;

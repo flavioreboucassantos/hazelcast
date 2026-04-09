@@ -1,12 +1,13 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity;
 
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityStringId;
+
 public final class EntityWaMessage extends BaseEntityStringId {
 
 	public String displayPhoneNumber;
 	public String from;
 	public String type;
 	public String body;
-	public long tsCreated;
 
 	public EntityWaMessage() {
 	}
@@ -28,7 +29,7 @@ public final class EntityWaMessage extends BaseEntityStringId {
 
 	@Override
 	public String toString() {
-		return "EntityWaMessage [displayPhoneNumber=" + displayPhoneNumber + ", from=" + from + ", type=" + type + ", body=" + body + ", tsCreated=" + tsCreated + "]";
+		return "EntityWaMessage [displayPhoneNumber=" + displayPhoneNumber + ", from=" + from + ", type=" + type + ", body=" + body + ", id=" + id + ", tsCreated=" + tsCreated + "]";
 	}
 
 }

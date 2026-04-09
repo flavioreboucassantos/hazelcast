@@ -6,9 +6,7 @@ import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.Enti
 import com.hazelcast.map.EntryProcessor;
 
 public class EntryProcessorPersonProfile implements EntryProcessor<Long, EntityPersonProfile, Object> {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 893643681350928876L;
 
 	/*
