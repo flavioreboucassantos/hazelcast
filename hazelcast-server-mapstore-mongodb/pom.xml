@@ -17,6 +17,13 @@
 		<maven.compiler.release>25</maven.compiler.release>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>hazelcast-repository</id>
+			<url>https://repository.hazelcast.com/release/</url>
+		</repository>
+	</repositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -34,6 +41,12 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
+			<version>5.6.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast-enterprise</artifactId>
 			<version>5.6.0</version>
 			<scope>compile</scope>
 		</dependency>
