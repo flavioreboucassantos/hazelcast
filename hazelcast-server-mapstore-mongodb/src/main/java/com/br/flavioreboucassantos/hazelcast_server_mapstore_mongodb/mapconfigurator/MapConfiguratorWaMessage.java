@@ -30,7 +30,7 @@ public class MapConfiguratorWaMessage implements BaseMapConfigurator {
 	public void setMapConfig(final MongoDatabase database, final Config config) {
 		final MapConfig mapConfig = new MapConfig(mapName);
 
-		mapConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
+		mapConfig.setInMemoryFormat(InMemoryFormat.BINARY);
 
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		mapStoreConfig.setImplementation(new BaseMapStoreStringId<>(EntityWaMessage.class, database, collectionName)); // <----------

@@ -68,9 +68,9 @@ public class ControllerEntityWaMessage {
 				Predicates.greaterEqual("tsCreated", 1),
 				Predicates.lessEqual("tsCreated", 2));
 
-		final PagingPredicate<String, EntityWaMessage> pagingPredicate = Predicates.pagingPredicate(comparatorStringIdTsCreatedDesc, 2);
+		final PagingPredicate<String, EntityWaMessage> pagingPredicate = Predicates.pagingPredicate(comparatorStringIdTsCreatedDesc, 100);
 
-		Collection<EntityWaMessage> result = mapWaMessage.values(pagingPredicate);
+		final Collection<EntityWaMessage> result = mapWaMessage.values(pagingPredicate);
 
 		return result;
 	}
