@@ -37,9 +37,9 @@ public class ClientConfiguratorEntityWaMessage implements BaseClientConfigurator
 		/*
 		 * 2) Configure EvictionConfig and attach to NearCacheConfig
 		 */
-		final EvictionConfig evictionConfigNearCacheConfig = new EvictionConfig();
+		final EvictionConfig evictionConfig = new EvictionConfig();
 		// Define a política de evicção
-		evictionConfigNearCacheConfig.setEvictionPolicy(EvictionPolicy.LFU);
+		evictionConfig.setEvictionPolicy(EvictionPolicy.LFU);
 		/*
 		 * Define o critério de tamanho:
 		 * In Hazelcast, Near Cache eviction policies are strictly limited by the storage format.
@@ -49,11 +49,11 @@ public class ClientConfiguratorEntityWaMessage implements BaseClientConfigurator
 		 * - OBJECT format: Often used for performance to avoid deserialization, but also typically limited to ENTRY_COUNT.
 		 * - NATIVE format (Enterprise): Supports USED_NATIVE_MEMORY_SIZE, USED_NATIVE_MEMORY_PERCENTAGE, etc.
 		 */
-		evictionConfigNearCacheConfig.setMaxSizePolicy(MaxSizePolicy.ENTRY_COUNT);
+		evictionConfig.setMaxSizePolicy(MaxSizePolicy.ENTRY_COUNT);
 		// Define o tamanho máximo
-		evictionConfigNearCacheConfig.setSize(100);
+		evictionConfig.setSize(100);
 		// Attach EvictionConfig
-		nearCacheConfig.setEvictionConfig(evictionConfigNearCacheConfig);
+		nearCacheConfig.setEvictionConfig(evictionConfig);
 		clientConfig.addNearCacheConfig(nearCacheConfig);
 
 		/*

@@ -5,7 +5,7 @@ import com.hazelcast.nio.serialization.compact.CompactReader;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
 import com.hazelcast.nio.serialization.compact.CompactWriter;
 
-public class SerializerWaContactProfile implements CompactSerializer<EntityWaContactProfile> {
+public final class SerializerWaContactProfile implements CompactSerializer<EntityWaContactProfile> {
 
 	@Override
 	public EntityWaContactProfile read(final CompactReader reader) {

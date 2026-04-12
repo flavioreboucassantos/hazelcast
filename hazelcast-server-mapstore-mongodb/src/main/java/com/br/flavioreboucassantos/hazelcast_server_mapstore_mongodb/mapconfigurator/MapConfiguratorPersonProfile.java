@@ -1,18 +1,19 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.ConfigLoader;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityPersonProfile;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.BaseMapStoreLongId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.EvictionPolicyComparatorLongIdTsCreatedDesc;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStorePersonProfile;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerPersonProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
-import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.IndexConfig;
 import com.hazelcast.config.IndexType;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.config.MaxSizePolicy;
+import com.hazelcast.config.NearCacheConfig;
 import com.mongodb.client.MongoDatabase;
 
 public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
@@ -30,12 +31,15 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 
 		final MapConfig mapConfig = new MapConfig(mapName);
 
+		// Set to enable/disable map level statistics for this map
+		mapConfig.setStatisticsEnabled(true);
+
 		/*
 		 * 1) Configure MapStoreConfig to MapConfig
 		 */
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		// Sets the map store implementation object
-		mapStoreConfig.setImplementation(new BaseMapStoreLongId<>(EntityPersonProfile.class, database, collectionName)); // <----------
+		mapStoreConfig.setImplementation(new MapStorePersonProfile(database, collectionName)); // <----------
 		// Enabled for map
 		mapStoreConfig.setEnabled(true);
 		// The time in seconds to wait before writing entries to the data store (write-behind). A value of 0 means write-through.
@@ -51,56 +55,55 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 //				.setProperty("quarkus.mongodb.database", "db_hzc_mapstore");
 //				.setProperty("user", "myuser")
 //				.setProperty("password", "mypass");
-
-		/*
-		 * 2) Configure MapConfig and attach MapStoreConfig to MapConfig
-		 */
-		// Set to enable/disable map level statistics for this map
-		mapConfig.setStatisticsEnabled(true);
-
-		/*
-		 * 2.1) DataPersistenceConfig
-		 */
-//		final DataPersistenceConfig dataPersistenceConfig = new DataPersistenceConfig();
-//		dataPersistenceConfig.setEnabled(true);
-
-		/*
-		 * 2.2) Near Cache no MapConfig (Lado do Membro/Servidor)
-		 * - Quando configurado no membro, o Near Cache é populado nos nós do cluster.
-		 * - Isso é útil para lite members ou caches locais em servidores que acessam dados de outros membros.
-		 */
-
-		/*
-		 * 2.9) Attachs
-		 */
-		// Attach DataPersistenceConfig
-//		mapConfig.setDataPersistenceConfig(dataPersistenceConfig);
-		// Add Index to Map
-		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
 		// Attach Store
 		mapConfig.setMapStoreConfig(mapStoreConfig);
 
 		/*
-		 * 3) Configure EvictionConfig and attach to MapConfig
+		 * 2) Configure NearCacheConfig and EvictionConfig and Attach to MapConfig
+		 * A principal diferença entre definir o EvictionConfig (evicção) no MapConfig e no NearCacheConfig no Hazelcast reside no escopo da cache (global vs. local) e no objetivo da gestão de memória.
+		 * MapConfig (Evicção Global/Cluster): Gerencia a memória de todo o cluster. Quando uma entrada é evictada (removida) aqui, ela desaparece de todos os membros do cluster.
+		 * NearCacheConfig (Evicção Local/Cliente): Gerencia a memória local do cliente ou do nó que está lendo os dados. A evicção aqui remove apenas a cópia local, sem afetar os dados no cluster principal.
 		 */
-		final EvictionConfig evictionConfigMapConfig = new EvictionConfig();
-		// Define a política de evicção
-		evictionConfigMapConfig.setEvictionPolicy(EvictionPolicy.LFU);
-		// Define o critério de tamanho
-		evictionConfigMapConfig.setMaxSizePolicy(MaxSizePolicy.FREE_HEAP_SIZE);
-		// Define o tamanho máximo
-		evictionConfigMapConfig.setSize(100);
-		// Attach EvictionConfig
-		mapConfig.setEvictionConfig(evictionConfigMapConfig);
+		final NearCacheConfig nearCacheConfig = new NearCacheConfig(mapName)
+				.setInMemoryFormat(InMemoryFormat.OBJECT)
+				.setInvalidateOnChange(true)
+				.setTimeToLiveSeconds(3600 * 10)
+				.setMaxIdleSeconds(60 * 20);
+
+		final EvictionConfig evictionConfig = new EvictionConfig();
+		evictionConfig.setComparator(new EvictionPolicyComparatorLongIdTsCreatedDesc()); // <----------
+		/*
+		 * Substituição da Lógica:
+		 * Quando você define uma classe customizada que implementa EvictionPolicyComparator e a configura no EvictionConfig,
+		 * o Hazelcast utiliza essa classe para decidir qual entrada remover,
+		 * ignorando a política eviction-policy (LRU/LFU/RANDOM) definida.
+		 */
+//		evictionConfig.setEvictionPolicy(EvictionPolicy.LRU);
+		evictionConfig.setMaxSizePolicy(MaxSizePolicy.ENTRY_COUNT);
+		evictionConfig.setSize(2);
+		nearCacheConfig.setEvictionConfig(evictionConfig);
+		// Attach NearCacheConfig
+		mapConfig.setNearCacheConfig(nearCacheConfig);
 
 		/*
-		 * 4) Configure Config and attach MapConfig
+		 * 3) Set Data Persistence Config
 		 */
-		// Attach MapConfig
+//		final DataPersistenceConfig dataPersistenceConfig = new DataPersistenceConfig();
+//		dataPersistenceConfig.setEnabled(true);
+//		mapConfig.setDataPersistenceConfig(dataPersistenceConfig);	
+
+		/*
+		 * 4) Add Index to Map
+		 */
+		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
+
+		/*
+		 * 5) Attach MapConfig
+		 */
 		config.addMapConfig(mapConfig);
 
 		/*
-		 * 5) Compact Serialization:
+		 * 6) Compact Serialization:
 		 * - Compact Serialization no Hazelcast (introduzida como estável na versão 5.2+) é altamente recomendado para melhorar o desempenho, reduzir o uso de memória e bandwidth, e suportar evolução de esquema (schema evolution) sem a
 		 * necessidade de reescrever classes ou implementar interfaces de serialização pesadas.
 		 * - Permitir que o Hazelcast use reflexão para serializar classes automaticamente.

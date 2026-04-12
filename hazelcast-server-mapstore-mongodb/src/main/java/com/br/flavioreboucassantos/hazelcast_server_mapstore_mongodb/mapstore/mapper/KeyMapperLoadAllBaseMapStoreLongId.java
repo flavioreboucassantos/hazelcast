@@ -4,10 +4,10 @@ import java.util.function.Function;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityLongId;
 
-public final class KeyMapperLoadAllBaseMapStoreLongId<T extends BaseEntityLongId> implements Function<T, Long> {
+public final class KeyMapperLoadAllBaseMapStoreLongId<V extends BaseEntityLongId> implements Function<V, Long> {
 
 	@Override
-	public Long apply(final T t) {
+	public Long apply(final V t) {
 		return t.id;
 	}
 

@@ -59,6 +59,7 @@ public class HazelcastEmbeddedServer {
 	static private final Config hazelcastConfig = new Config();
 
 	static {
+		hazelcastConfig.setLicenseKey(ConfigLoader.getProperty("hazelcast.license-key"));
 		hazelcastConfig.getJetConfig().setEnabled(true);
 		hazelcastConfig.getJetConfig().setResourceUploadEnabled(true);
 

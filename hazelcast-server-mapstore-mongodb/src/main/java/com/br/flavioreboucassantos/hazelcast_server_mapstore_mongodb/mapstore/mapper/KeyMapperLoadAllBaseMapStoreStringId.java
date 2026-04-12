@@ -4,10 +4,10 @@ import java.util.function.Function;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.base.BaseEntityStringId;
 
-public final class KeyMapperLoadAllBaseMapStoreStringId<T extends BaseEntityStringId> implements Function<T, String> {
+public final class KeyMapperLoadAllBaseMapStoreStringId<V extends BaseEntityStringId> implements Function<V, String> {
 
 	@Override
-	public String apply(final T t) {
+	public String apply(final V t) {
 		return t.id;
 	}
 

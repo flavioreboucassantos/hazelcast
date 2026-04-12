@@ -1,8 +1,7 @@
-package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore;
+package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.base;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -21,18 +20,22 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Sorts;
 
-public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements MapStore<Long, V> {
+public abstract class BaseMapStoreLongId<V extends BaseEntityLongId> implements MapStore<Long, V> {
 	private final ILogger LOG = Logger.getLogger(BaseMapStoreLongId.class);
 
-	private final MongoCollection<V> collection;
+	protected final MongoCollection<V> collection;
 
-	private final Bson projectionIncludeId = Projections.include("_id");
-	private final ReplaceOptions replaceOptionsUpsertTrue;
+	protected final Bson projectionIncludeOnlyId = Projections.include("_id");
+	protected final Bson sortsDescendingTsCreated = Sorts.descending("tsCreated");
+	protected final Bson sortsAscendingTsCreated = Sorts.ascending("tsCreated");
 
-	private final KeyMapperLoadAllBaseMapStoreLongId<V> keyMapperLoadAllBaseMapStoreLongId = new KeyMapperLoadAllBaseMapStoreLongId<V>();
-	private final ValueMapperLoadAllBaseMapStore<V> valueMapperLoadAllBaseMapStore = new ValueMapperLoadAllBaseMapStore<V>();
-	private final MapperLoadAllKeysBaseMapStoreLongId<V> mapperLoadAllKeysBaseMapStoreLongId = new MapperLoadAllKeysBaseMapStoreLongId<V>();
+	protected final ReplaceOptions replaceOptionsUpsertTrue;
+
+	protected final KeyMapperLoadAllBaseMapStoreLongId<V> keyMapperLoadAllBaseMapStoreLongId = new KeyMapperLoadAllBaseMapStoreLongId<V>();
+	protected final ValueMapperLoadAllBaseMapStore<V> valueMapperLoadAllBaseMapStore = new ValueMapperLoadAllBaseMapStore<V>();
+	protected final MapperLoadAllKeysBaseMapStoreLongId<V> mapperLoadAllKeysBaseMapStoreLongId = new MapperLoadAllKeysBaseMapStoreLongId<V>();
 
 	public BaseMapStoreLongId(final Class<V> clazz, final MongoDatabase database, final String collectionName) {
 		this.collection = database.getCollection(collectionName, clazz);
@@ -42,7 +45,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public V load(final Long key) {
+	public final V load(final Long key) {
 
 		LOG.info("load:: " + key);
 
@@ -50,7 +53,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public Map<Long, V> loadAll(final Collection<Long> keys) {
+	public final Map<Long, V> loadAll(final Collection<Long> keys) {
 
 		LOG.info("loadAll::>> ");
 
@@ -65,23 +68,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public Iterable<Long> loadAllKeys() {
-
-		LOG.info("loadAllKeys>> ");
-
-		final List<Long> ids = new ArrayList<Long>();
-		collection.find()
-				.projection(projectionIncludeId)
-				.map(mapperLoadAllKeysBaseMapStoreLongId)
-				.into(ids);
-
-		LOG.info("loadAllKeys:: " + ids.toString());
-
-		return ids;
-	}
-
-	@Override
-	public void store(final Long key, final V value) {
+	public final void store(final Long key, final V value) {
 
 		LOG.info("store:: " + key + value.toString());
 
@@ -95,7 +82,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void storeAll(final Map<Long, V> map) {
+	public final void storeAll(final Map<Long, V> map) {
 
 		LOG.info("storeAll:: " + map.toString());
 
@@ -103,7 +90,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void delete(final Long key) {
+	public final void delete(final Long key) {
 
 		LOG.info("delete:: " + key);
 
@@ -111,7 +98,7 @@ public final class BaseMapStoreLongId<V extends BaseEntityLongId> implements Map
 	}
 
 	@Override
-	public void deleteAll(final Collection<Long> keys) {
+	public final void deleteAll(final Collection<Long> keys) {
 
 		LOG.info("deleteAll:: " + keys);
 

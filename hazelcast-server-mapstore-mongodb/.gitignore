@@ -1,3 +1,5 @@
+src/main/resources/hazelcast.license-key
+
 #Maven
 target/
 pom.xml.tag

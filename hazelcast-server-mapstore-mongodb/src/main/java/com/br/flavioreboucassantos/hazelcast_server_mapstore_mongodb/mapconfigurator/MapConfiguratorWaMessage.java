@@ -1,8 +1,8 @@
 package com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapconfigurator;
 
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.ConfigLoader;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.entity.EntityWaMessage;
-import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.BaseMapStoreStringId;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.comparator.EvictionPolicyComparatorStringIdTsCreatedDesc;
+import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.MapStoreWaMessage;
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerWaMessage;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
@@ -14,6 +14,7 @@ import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.config.MaxSizePolicy;
+import com.hazelcast.config.NearCacheConfig;
 import com.mongodb.client.MongoDatabase;
 
 public class MapConfiguratorWaMessage implements BaseMapConfigurator {
@@ -33,13 +34,28 @@ public class MapConfiguratorWaMessage implements BaseMapConfigurator {
 		mapConfig.setInMemoryFormat(InMemoryFormat.BINARY);
 
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
-		mapStoreConfig.setImplementation(new BaseMapStoreStringId<>(EntityWaMessage.class, database, collectionName)); // <----------
+		mapStoreConfig.setImplementation(new MapStoreWaMessage(database, collectionName)); // <----------
 		mapStoreConfig.setEnabled(true);
 		mapStoreConfig.setWriteDelaySeconds(12);
 		mapStoreConfig.setWriteBatchSize(100);
 		mapStoreConfig.setWriteCoalescing(true);
 		mapStoreConfig.setInitialLoadMode(InitialLoadMode.LAZY);
 		mapConfig.setMapStoreConfig(mapStoreConfig);
+
+		final NearCacheConfig nearCacheConfig = new NearCacheConfig(mapName)
+				.setInMemoryFormat(InMemoryFormat.OBJECT)
+				.setInvalidateOnChange(true)
+				.setTimeToLiveSeconds(3600 * 10)
+				.setMaxIdleSeconds(60 * 20);
+
+		final EvictionConfig evictionConfig = new EvictionConfig();
+		evictionConfig.setComparator(new EvictionPolicyComparatorStringIdTsCreatedDesc()); // <----------
+		evictionConfig.setMaxSizePolicy(MaxSizePolicy.ENTRY_COUNT);
+		evictionConfig.setSize(1000);
+		nearCacheConfig.setEvictionConfig(evictionConfig);
+
+		mapConfig.setNearCacheConfig(nearCacheConfig);
+//		mapConfig.setEvictionConfig(evictionConfig);
 
 		mapConfig.setStatisticsEnabled(true);
 
