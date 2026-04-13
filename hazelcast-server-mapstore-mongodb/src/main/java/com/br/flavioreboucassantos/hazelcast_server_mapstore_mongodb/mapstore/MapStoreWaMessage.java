@@ -25,12 +25,12 @@ public final class MapStoreWaMessage extends BaseMapStoreStringId<EntityWaMessag
 		collection.find()
 				.projection(projectionIncludeOnlyId)
 				.sort(sortsDescendingTsCreated)
-//				.limit(2)
+//				.limit(100)
 				.map(mapperLoadAllKeysBaseMapStoreStringId)
 				.into(ids);
 
 		// LOG.info("loadAllKeys:: " + ids.toString());
-		
+
 		LOG.info("\n\nloadAllKeys::ids.size()=" + ids.size());
 
 		return ids;

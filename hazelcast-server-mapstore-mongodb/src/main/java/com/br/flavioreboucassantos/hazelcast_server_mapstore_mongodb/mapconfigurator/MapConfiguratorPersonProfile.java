@@ -30,9 +30,10 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 	public void setMapConfig(final MongoDatabase database, final Config config) {
 
 		final MapConfig mapConfig = new MapConfig(mapName);
-
 		// Set to enable/disable map level statistics for this map
 		mapConfig.setStatisticsEnabled(true);
+		// Add Index to Map
+		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
 
 		/*
 		 * 1) Configure MapStoreConfig to MapConfig
@@ -69,7 +70,6 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 				.setInvalidateOnChange(true)
 				.setTimeToLiveSeconds(3600 * 10)
 				.setMaxIdleSeconds(60 * 20);
-
 		final EvictionConfig evictionConfig = new EvictionConfig();
 		evictionConfig.setComparator(new EvictionPolicyComparatorLongIdTsCreatedDesc()); // <----------
 		/*
@@ -93,17 +93,12 @@ public class MapConfiguratorPersonProfile implements BaseMapConfigurator {
 //		mapConfig.setDataPersistenceConfig(dataPersistenceConfig);	
 
 		/*
-		 * 4) Add Index to Map
-		 */
-		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
-
-		/*
-		 * 5) Attach MapConfig
+		 * 4) Attach MapConfig
 		 */
 		config.addMapConfig(mapConfig);
 
 		/*
-		 * 6) Compact Serialization:
+		 * 5) Compact Serialization:
 		 * - Compact Serialization no Hazelcast (introduzida como estável na versão 5.2+) é altamente recomendado para melhorar o desempenho, reduzir o uso de memória e bandwidth, e suportar evolução de esquema (schema evolution) sem a
 		 * necessidade de reescrever classes ou implementar interfaces de serialização pesadas.
 		 * - Permitir que o Hazelcast use reflexão para serializar classes automaticamente.

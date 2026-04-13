@@ -23,7 +23,44 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
+/**
+ * @author Flávio Rebouças Santos - flavioReboucasSantos@gmail.com
+ */
 public class HazelcastEmbeddedServer {
+	/*
+	 * O Hazelcast é uma plataforma de computação distribuída em memória que utiliza uma arquitetura "masterless" (sem mestre), onde os dados são divididos em partições (partitions) e distribuídos entre os nós (nodes/members) do cluster.
+	 * Essa estrutura permite escalabilidade horizontal e alta disponibilidade.
+	 * 
+	 * Aqui está o funcionamento detalhado:
+	 * 1. Nodes (Nós/Membros)
+	 * - O que são: Cada instância da JVM executando o Hazelcast é considerada um nó ou membro do cluster.
+	 * - Arquitetura Masterless: Todos os nós são iguais. Não existe um "nó mestre" central, o que evita gargalos e pontos únicos de falha.
+	 * - Responsabilidade: Os nós se comunicam entre si para gerenciar o cluster, replicar dados e lidar com falhas automaticamente. Ao adicionar novos nós, o cluster se rebalanceia sozinho.
+	 * 
+	 * 2. Partitions (Partições)
+	 * - O que são: Partições são os segmentos lógicos de memória nos quais o Hazelcast armazena dados. O Hazelcast divide os dados do cluster nessas partições para processamento paralelo.
+	 * - Quantidade padrão: Por padrão, o Hazelcast divide os dados em 271 partições.
+	 * - Distribuição: Essas 271 partições são distribuídas uniformemente entre todos os nós disponíveis. Se houver 1 nó, ele detém todas as 271. Se houver 2 nós, cada um detém aproximadamente 135 ou 136.
+	 * 
+	 * 3. Como funciona a Partição e Distribuição (Hashing)
+	 * - O Hazelcast usa um algoritmo de hashing consistente para decidir onde cada dado é armazenado:
+	 * - Chave da Entrada: Quando você insere um dado (ex: map.put(key, value)), o Hazelcast serializa a chave (key) em um array de bytes.
+	 * - Hashing: Esse array de bytes passa por um algoritmo de hash.
+	 * - Módulo (MOD): O resultado do hash é aplicado a um cálculo de módulo: MOD(hash_result, 271).
+	 * - ID da Partição: O resultado define o ID da partição (de 0 a 270) onde o par chave-valor será guardado.
+	 * 
+	 * 4. Backup e Disponibilidade (Replicação)
+	 * - Para garantir a segurança dos dados, o Hazelcast cria réplicas (backups) das partições:
+	 * - Primary Partitions: A partição "dona" do dado é a primária.
+	 * - Backup Partitions: Cópias dessas partições são distribuídas em outros nós.
+	 * - Exemplo: Se você configurar 1 backup, cada partição primária tem uma cópia em outro nó. Se um nó cair, o nó que continha o backup assume o papel de primário, evitando perda de dados.
+	 * 
+	 * Resumo do Funcionamento
+	 * - Escalabilidade: Mais nós = mais partições distribuídas = mais memória e processamento paralelo.
+	 * - Balanceamento: O Hazelcast tenta manter o número de partições igual em todos os nós para evitar "pontos quentes" (hotspots).
+	 * - Partição de Rede (Network Partition): O Hazelcast foi projetado para alta disponibilidade (AP - Availability & Partition Tolerance), mantendo o sistema funcional mesmo com falhas de rede entre os nós, priorizando a consistência final (eventual
+	 * consistency).
+	 */
 
 	static private final ILogger LOG = Logger.getLogger(HazelcastEmbeddedServer.class);
 

@@ -6,7 +6,6 @@ import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.mapstore.Ma
 import com.br.flavioreboucassantos.hazelcast_server_mapstore_mongodb.serializer.SerializerWaContactProfile;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionConfig;
-import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
@@ -28,6 +27,8 @@ public class MapConfiguratorWaContactProfile implements BaseMapConfigurator {
 	@Override
 	public void setMapConfig(final MongoDatabase database, final Config config) {
 		final MapConfig mapConfig = new MapConfig(mapName);
+		mapConfig.setStatisticsEnabled(true);
+		mapConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
 
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		mapStoreConfig.setImplementation(new MapStoreWaContactProfile(database, collectionName)); // <----------
@@ -43,22 +44,12 @@ public class MapConfiguratorWaContactProfile implements BaseMapConfigurator {
 				.setInvalidateOnChange(true)
 				.setTimeToLiveSeconds(3600 * 10)
 				.setMaxIdleSeconds(60 * 20);
-
 		final EvictionConfig evictionConfig = new EvictionConfig();
 		evictionConfig.setComparator(new EvictionPolicyComparatorLongIdTsCreatedDesc()); // <----------
 		evictionConfig.setMaxSizePolicy(MaxSizePolicy.ENTRY_COUNT);
 		evictionConfig.setSize(2);
 		nearCacheConfig.setEvictionConfig(evictionConfig);
-
 		mapConfig.setNearCacheConfig(nearCacheConfig);
-
-		mapConfig.setStatisticsEnabled(true);
-
-		final EvictionConfig evictionConfigMapConfig = new EvictionConfig();
-		evictionConfigMapConfig.setEvictionPolicy(EvictionPolicy.LFU);
-		evictionConfigMapConfig.setMaxSizePolicy(MaxSizePolicy.FREE_HEAP_SIZE);
-		evictionConfigMapConfig.setSize(100);
-		mapConfig.setEvictionConfig(evictionConfigMapConfig);
 
 		config.addMapConfig(mapConfig);
 

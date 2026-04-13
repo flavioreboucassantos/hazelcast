@@ -30,8 +30,9 @@ public class MapConfiguratorWaMessage implements BaseMapConfigurator {
 	@Override
 	public void setMapConfig(final MongoDatabase database, final Config config) {
 		final MapConfig mapConfig = new MapConfig(mapName);
-
-		mapConfig.setInMemoryFormat(InMemoryFormat.BINARY);
+		mapConfig.setStatisticsEnabled(true);
+		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
+		mapConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
 
 		final MapStoreConfig mapStoreConfig = new MapStoreConfig();
 		mapStoreConfig.setImplementation(new MapStoreWaMessage(database, collectionName)); // <----------
@@ -47,25 +48,12 @@ public class MapConfiguratorWaMessage implements BaseMapConfigurator {
 				.setInvalidateOnChange(true)
 				.setTimeToLiveSeconds(3600 * 10)
 				.setMaxIdleSeconds(60 * 20);
-
 		final EvictionConfig evictionConfig = new EvictionConfig();
 		evictionConfig.setComparator(new EvictionPolicyComparatorStringIdTsCreatedDesc()); // <----------
 		evictionConfig.setMaxSizePolicy(MaxSizePolicy.ENTRY_COUNT);
-		evictionConfig.setSize(1000);
+		evictionConfig.setSize(25);
 		nearCacheConfig.setEvictionConfig(evictionConfig);
-
 		mapConfig.setNearCacheConfig(nearCacheConfig);
-//		mapConfig.setEvictionConfig(evictionConfig);
-
-		mapConfig.setStatisticsEnabled(true);
-
-		mapConfig.addIndexConfig(new IndexConfig(IndexType.SORTED, "tsCreated"));
-
-		final EvictionConfig evictionConfigMapConfig = new EvictionConfig();
-		evictionConfigMapConfig.setEvictionPolicy(EvictionPolicy.LFU);
-		evictionConfigMapConfig.setMaxSizePolicy(MaxSizePolicy.FREE_HEAP_SIZE);
-		evictionConfigMapConfig.setSize(100);
-		mapConfig.setEvictionConfig(evictionConfigMapConfig);
 
 		config.addMapConfig(mapConfig);
 
